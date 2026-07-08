@@ -143,7 +143,7 @@ Inherits="HangeulHubWAPP.Home" %>
 
             <div class="journey-card">
                 <h3>👑 Advanced</h3>
-                <%--<p>Reading • Writing • Advanced Grammar</p>--%>
+                <p>Reading • Writing • Advanced Grammar</p>
             </div>
 
         </div>
