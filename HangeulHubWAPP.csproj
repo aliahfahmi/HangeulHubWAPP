@@ -101,6 +101,10 @@
   <ItemGroup>
     <Content Include="About.aspx" />
     <Content Include="Admin\AdminDashboard.aspx" />
+    <Content Include="App_Data\userDatabase.mdf" />
+    <Content Include="App_Data\userDatabase_log.ldf">
+      <DependentUpon>userDatabase.mdf</DependentUpon>
+    </Content>
     <Content Include="assets\css\bootstrap.min.css" />
     <Content Include="assets\css\custom.css" />
     <Content Include="assets\css\flex-slider.css" />
@@ -197,6 +201,7 @@
     <Content Include="assets\fonts\fontawesome-webfont.eot" />
     <Content Include="assets\fonts\FontAwesome.otf" />
     <Content Include="prepros-6.config" />
+    <Content Include="DBconnection.aspx" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
@@ -315,10 +320,15 @@
     <Compile Include="ViewSwitcher.ascx.designer.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>
     </Compile>
+    <Compile Include="DBconnection.aspx.cs">
+      <DependentUpon>DBconnection.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DBconnection.aspx.designer.cs">
+      <DependentUpon>DBconnection.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.7.0.slim.min.map" />
