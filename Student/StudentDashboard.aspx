@@ -170,7 +170,7 @@
         <!-- TOP BAR -->
         <div class="dashboard-topbar">
             <h2>Student Dashboard</h2>
-            <a href="../Home.aspx" class="logout-btn">Log Out</a>
+            <asp:LinkButton ID="btnLogout" runat="server" OnClick="btnLogout_Click" CssClass="logout-btn">Log Out</asp:LinkButton>
         </div>
 
         <!-- MAIN CONTENT SECTION -->
@@ -178,7 +178,7 @@
 
             <!-- Welcome message -->
             <div class="welcome-text">
-                <h1>Welcome, <span>Learner!</span></h1>
+                <h1>Welcome, <span id="name" runat="server">Learner!</span></h1>
                 <p>Pick up where you left off and keep learning Korean.</p>
             </div>
 

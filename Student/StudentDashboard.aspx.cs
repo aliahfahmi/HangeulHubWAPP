@@ -11,7 +11,22 @@ namespace HangeulHubWAPP.Student
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["name"] != null)
+            {
+                name.InnerText = Session["name"].ToString() + "!";
+            }
+            else
+            {
+                Response.Redirect("../Home.aspx");
+            }
+        }
 
+        protected void btnLogout_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            Session.Abandon();
+            Request.Cookies.Clear();
+            Response.Redirect("../Home.aspx");
         }
     }
 }
