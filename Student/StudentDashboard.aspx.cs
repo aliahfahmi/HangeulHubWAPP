@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -11,13 +13,45 @@ namespace HangeulHubWAPP.Student
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["name"] != null)
+
+            if (Session["UserID"] == null)
             {
-                name.InnerText = Session["name"].ToString() + "!";
+                Session["UserID"] = "1";
             }
-            else
+
+            // 2. Fetch the name from the DB on first load
+            if (!IsPostBack)
             {
-                Response.Redirect("../Home.aspx");
+                string userId = Session["UserID"].ToString();
+                string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+
+                // Updated query to look for your 'name' column
+                string query = "SELECT name FROM userTable WHERE id = @Id";
+
+                using (SqlConnection conn = new SqlConnection(connString))
+                {
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Id", userId);
+
+                        try
+                        {
+                            conn.Open();
+                            object result = cmd.ExecuteScalar();
+
+                            if (result != null)
+                            {
+                                // 3. Update the dashboard label with the database value
+                                name.Text = result.ToString();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            // Helpful error tracking if a column name or connection misbehaves
+                            name.Text = "Error: " + ex.Message;
+                        }
+                    }
+                }
             }
         }
 

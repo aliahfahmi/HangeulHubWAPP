@@ -178,7 +178,7 @@
 
             <!-- Welcome message -->
             <div class="welcome-text">
-                <h1>Welcome, <span id="name" runat="server">Learner!</span></h1>
+                <h1>Welcome, <asp:Label ID="name" runat="server" Text="Learner"></asp:Label>!</h1>
                 <p>Pick up where you left off and keep learning Korean.</p>
             </div>
 
