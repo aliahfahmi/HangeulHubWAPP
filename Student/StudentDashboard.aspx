@@ -14,6 +14,7 @@
 
     <style>
 
+
         /* ================================
            COLOUR SETTINGS (change here to re-theme the whole page)
            ================================ */
@@ -164,7 +165,9 @@
 
     </style>
 </head>
+
 <body>
+
     <form id="form1" runat="server">
 
         <!-- TOP BAR -->
@@ -202,7 +205,6 @@
                     <h4>Leaderboard</h4>
                     <p>See how you rank among learners.</p>
                 </a>
-
             </div>
 
         </section>

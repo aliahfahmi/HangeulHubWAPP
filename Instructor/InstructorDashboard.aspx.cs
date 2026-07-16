@@ -11,7 +11,24 @@ namespace HangeulHubWAPP.Instructor
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["UserID"] == null)
+            {
+                Response.Redirect("~/Login.aspx");
+                return;
+            }
 
+            if (Session["Role"].ToString() != "Instructor")
+            {
+                Response.Redirect("~/Login.aspx");
+                return;
+            }
+        }
+        protected void btnLogout_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            Session.Abandon();
+
+            Response.Redirect("~/Home.aspx");
         }
     }
 }

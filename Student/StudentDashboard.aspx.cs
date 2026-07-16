@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace HangeulHubWAPP.Student
 {
@@ -11,13 +7,15 @@ namespace HangeulHubWAPP.Student
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["name"] != null)
+            if (Session["UserID"] == null)
             {
-                name.Text = Session["name"].ToString() + "!";
+                Response.Redirect("../Login.aspx");
+                return;
             }
-            else
+
+            if (!IsPostBack)
             {
-                Response.Redirect("../Home.aspx");
+                name.Text = Session["Name"].ToString();
             }
         }
 
@@ -25,7 +23,7 @@ namespace HangeulHubWAPP.Student
         {
             Session.Clear();
             Session.Abandon();
-            Request.Cookies.Clear();
+
             Response.Redirect("../Home.aspx");
         }
     }
