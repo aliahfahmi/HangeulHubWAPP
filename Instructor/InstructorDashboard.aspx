@@ -203,7 +203,7 @@
         <h3 class="section-title">Instructor Actions</h3>
 
         <div class="action-row">
-            <a href="ManageLessons.aspx" class="action-card">
+            <a href="ManageLesson.aspx" class="action-card">
                 <i class="fa fa-book"></i>
                 <h4>Manage Lessons</h4>
                 <p>Add, edit, or remove Hangul, vocabulary, and grammar lessons.</p>
@@ -215,13 +215,13 @@
                 <p>Read student questions and send helpful replies.</p>
             </a>
 
-            <a href="#" class="action-card">
+            <a href="ManageQuizzes.aspx" class="action-card">
                 <i class="fa fa-pencil-square-o"></i>
                 <h4>Manage Quizzes</h4>
                 <p>Create and update quizzes for each course level.</p>
             </a>
 
-            <a href="#" class="action-card">
+            <a href="ManageAnnouncements.aspx" class="action-card">
                 <i class="fa fa-bullhorn"></i>
                 <h4>Announcements</h4>
                 <p>Post updates about lessons and assessments.</p>

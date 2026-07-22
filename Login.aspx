@@ -1,4 +1,7 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="HangeulHubWAPP.Login" %>
+﻿<%@ Page Language="C#"
+    AutoEventWireup="true"
+    CodeBehind="Login.aspx.cs"
+    Inherits="HangeulHubWAPP.Login" %>
 
 <!DOCTYPE html>
 
@@ -31,9 +34,7 @@
             interactive quizzes and personalised progress tracking.
         </p>
         <div class="features">
-            <div>📚 Structured Lessons</div>
-            <div>📝 Interactive Quizzes</div>
-            <div>🏆 Track Your Progress</div>
+
         </div>
     </div>
 
@@ -41,7 +42,7 @@
 
     <div class="right-panel">
         <div class="login-card">
-            <h2>Welcome Back 👋</h2>
+            <h2>Welcome Back</h2>
             <p>
                 Login to continue your learning journey.
             </p>
@@ -53,20 +54,25 @@
                 placeholder="Email Address">
             </asp:TextBox>
 
+            <div class="password-box">
+
             <asp:TextBox
                 ID="txtPassword"
                 runat="server"
                 TextMode="Password"
                 CssClass="login-input"
+                ClientIDMode="Static"
                 placeholder="Password">
             </asp:TextBox>
-            <div class="remember">
 
+            <i class="fa fa-eye toggle-password"
+                onclick="togglePassword('txtPassword', this)"></i>
+
+            </div>
             <asp:CheckBox
                 ID="chkRemember"
                 runat="server"
                 Text="Remember Me" />
-            </div>
 
             <asp:Label
                 ID="lblMessage"
@@ -79,7 +85,8 @@
                 runat="server"
                 Text="LOGIN"
                 CssClass="login-btn"
-                OnClick="btnLogin_Click" />
+                OnClick="btnLogin_Click">
+            </asp:Button>
 
             <div class="bottom-links">
                 <a href="#">Forgot Password?</a>
@@ -91,8 +98,30 @@
             </div>
         </div>
     </div>
-
-</div>
 </form>
+<script>
+
+    function togglePassword(id, icon) {
+
+        const txt = document.getElementById(id);
+
+        if (txt.type === "password") {
+
+            txt.type = "text";
+
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+
+        } else {
+
+            txt.type = "password";
+
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+
+        }
+
+    }
+</script>
 </body>
 </html>
