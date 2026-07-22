@@ -41,15 +41,15 @@ namespace HangeulHubWAPP
                     switch (role)
                     {
                         case "Student":
-                            Response.Redirect("StudentDashboard.aspx");
+                            Response.Redirect("~/Student/StudentDashboard.aspx");
                             break;
 
-                        case "Instructor":
-                            Response.Redirect("InstructorDashboard.aspx");
+                        case "Language Instructor":
+                            Response.Redirect("~/Instructor/InstructorDashboard.aspx");
                             break;
 
                         case "Admin":
-                            Response.Redirect("AdminDashboard.aspx");
+                            Response.Redirect("~/Admin/AdminDashboard.aspx");
                             break;
 
                         default:
