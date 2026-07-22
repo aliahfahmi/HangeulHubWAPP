@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Web.UI;
+using WebGrease.Activities;
 
 namespace HangeulHubWAPP
 {
@@ -26,37 +27,35 @@ namespace HangeulHubWAPP
                 cmd.Parameters.AddWithValue("@email", txtEmail.Text.Trim());
                 cmd.Parameters.AddWithValue("@pwd", txtPassword.Text.Trim());
 
-                SqlDataReader dr = cmd.ExecuteReader();
+                SqlDataReader reader = cmd.ExecuteReader();
 
-                if (dr.Read())
+                if (reader.Read())
                 {
-                    // Save user session
-                    Session["UserID"] = dr["UserID"].ToString();
-                    Session["Name"] = dr["name"].ToString();
-                    Session["Email"] = dr["email"].ToString();
-                    Session["Role"] = dr["role"].ToString();
+                    Session["UserID"] = reader["UserID"].ToString();
+                    Session["Name"] = reader["name"].ToString();
+                    Session["Email"] = reader["email"].ToString();
+                    Session["Role"] = reader["role"].ToString();
 
-                    string role = dr["role"].ToString();
+                    string role = reader["role"].ToString().Trim();
 
-                    switch (role)
+                    if (role.Equals("Student", StringComparison.OrdinalIgnoreCase))
                     {
-                        case "Student":
-                            Response.Redirect("~/Student/StudentDashboard.aspx");
-                            break;
-
-                        case "Instructor":
-                            Response.Redirect("~/Instructor/InstructorDashboard.aspx");
-                            break;
-
-                        case "Admin":
-                            Response.Redirect("~/Admin/AdminDashboard.aspx");
-                            break;
-
-                        default:
-                            lblMessage.Text = "Unknown user role.";
-                            break;
+                        Response.Redirect("~/Student/StudentDashboard.aspx");
+                    }
+                    else if (role.Equals("Language Instructor", StringComparison.OrdinalIgnoreCase))
+                    {
+                        Response.Redirect("~/Instructor/InstructorDashboard.aspx");
+                    }
+                    else if (role.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+                    {
+                        Response.Redirect("~/Admin/AdminDashboard.aspx");
+                    }
+                    else
+                    {
+                        lblMessage.Text = "Unknown user role: " + role;
                     }
                 }
+
                 else
                 {
                     lblMessage.Text = "Invalid email or password.";
