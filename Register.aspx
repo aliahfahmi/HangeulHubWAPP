@@ -233,45 +233,45 @@ Inherits="HangeulHubWAPP.Register" %>
 
     <script>
 
-function previewImage(input){
+        function previewImage(input) {
 
-    if(input.files && input.files[0]){
+            if (input.files && input.files[0]) {
 
-        const reader=new FileReader();
+                const reader = new FileReader();
 
-        reader.onload=function(e){
+                reader.onload = function (e) {
 
-            document.getElementById("imgPreview").src=e.target.result;
+                    document.getElementById("imgPreview").src = e.target.result;
 
-            document.getElementById("imgPreview").style.display="block";
+                    document.getElementById("imgPreview").style.display = "block";
 
-        };
+                };
 
-        reader.readAsDataURL(input.files[0]);
+                reader.readAsDataURL(input.files[0]);
 
-    }
+            }
 
-}
-    function togglePassword(id, icon) {
-
-        var txt = document.getElementById(id);
-
-        if (txt.type === "password") {
-            txt.type = "text";
-
-            icon.classList.remove("fa-eye");
-
-            icon.classList.add("fa-eye-slash");
         }
-        else {
-            txt.type = "password";
+        function togglePassword(id, icon) {
 
-            icon.classList.remove("fa-eye-slash");
+            var txt = document.getElementById(id);
 
-            icon.classList.add("fa-eye");
+            if (txt.type === "password") {
+                txt.type = "text";
+
+                icon.classList.remove("fa-eye");
+
+                icon.classList.add("fa-eye-slash");
+            }
+            else {
+                txt.type = "password";
+
+                icon.classList.remove("fa-eye-slash");
+
+                icon.classList.add("fa-eye");
+            }
+
         }
-
-    }
 
     </script>
 </asp:Content>

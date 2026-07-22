@@ -1,4 +1,7 @@
-﻿<%@Page Language="C#" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="HangeulHubWAPP.Login" %>
+﻿<%@ Page Language="C#"
+    AutoEventWireup="true"
+    CodeBehind="Login.aspx.cs"
+    Inherits="HangeulHubWAPP.Login" %>
 
 <!DOCTYPE html>
 
@@ -82,7 +85,8 @@
                 runat="server"
                 Text="LOGIN"
                 CssClass="login-btn"
-                OnClick="btnLogin_Click" />
+                OnClick="btnLogin_Click">
+            </asp:Button>
 
             <div class="bottom-links">
                 <a href="#">Forgot Password?</a>

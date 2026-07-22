@@ -137,6 +137,7 @@
     <Content Include="assets\js\popper.js" />
     <Content Include="assets\js\scrollreveal.min.js" />
     <Content Include="assets\js\waypoints.min.js" />
+    <Content Include="assets\css\register.css" />
     <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
