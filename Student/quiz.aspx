@@ -1,34 +1,17 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Quiz.aspx.cs" Inherits="HangeulHubWAPP.Student.Quiz" %>
 
 <!DOCTYPE html>
-
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>Quiz - HangeulHub</title>
 
-    <!-- Google Font (Poppins) - loaded directly, no custom.css used -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Google Font (Poppins) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
 
-    <!-- Font Awesome, for icons -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 
     <style>
-
-        /* ================================
-           COLOUR SETTINGS (change here to re-theme the whole page)
-           ================================ */
-        /*
-            Background color   : #f4f4fc  (light lavender, same tone as Home.aspx)
-            Purple accent color: #7c5cfc  (used for headings, icons, buttons)
-            Dark text color    : #222222
-            Grey text color    : #666666
-            White (cards/topbar): #ffffff
-        */
-
-
-        /* ================================
-           BASIC PAGE SETTINGS
-           ================================ */
         * {
             margin: 0;
             padding: 0;
@@ -36,26 +19,22 @@
         }
 
         body {
-            font-family: 'Poppins', Arial, sans-serif;   /* <-- change font here */
-            background-color: #f4f4fc;                   /* <-- page background color */
-            color: #222222;                               /* <-- default text color */
+            font-family: 'Poppins', Arial, sans-serif;
+            background-color: #f4f4fc;
+            color: #222222;
         }
 
-
-        /* ================================
-           TOP BAR (title + back button)
-           ================================ */
+        /* TOP BAR */
         .dashboard-topbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 18px 40px;
-
-            background-color: #ffffff;        /* <-- top bar background color */
+            background-color: #ffffff;
         }
 
         .dashboard-topbar h2 {
-            color: #222222;                   /* <-- title text color */
+            color: #222222;
             font-weight: 700;
         }
 
@@ -67,24 +46,19 @@
             font-size: 14px;
             border: none;
             cursor: pointer;
-
-            background-color: #7c5cfc;        /* <-- back button background color */
-            color: #ffffff;                   /* <-- back button text color */
+            background-color: #7c5cfc;
+            color: #ffffff;
         }
 
         .back-btn:hover {
-            background-color: #6a4ae0;        /* <-- back button hover color */
+            background-color: #6a4ae0;
         }
 
-
-        /* ================================
-           PAGE CONTENT
-           ================================ */
+        /* PAGE CONTENT */
         .content-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
-
             padding: 30px 20px 60px 20px;
         }
 
@@ -96,29 +70,28 @@
         .welcome-text h1 {
             font-size: 30px;
             font-weight: 800;
-            color: #222222;                   /* <-- heading text color */
-        }
-
-        .welcome-text h1 span {
-            color: #7c5cfc;                   /* <-- accent purple word color */
+            color: #222222;
         }
 
         .quiz-info {
             text-align: center;
             font-size: 14px;
-            color: #666666;                   /* <-- quiz info text color */
+            color: #666666;
             margin-bottom: 25px;
         }
 
+        .alert-message {
+            color: #e74c3c;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-align: center;
+        }
 
-        /* ================================
-           QUESTION CARD
-           ================================ */
+        /* QUESTION CARD */
         .question-card {
             width: 100%;
             max-width: 650px;
-
-            background-color: #ffffff;        /* <-- card background color */
+            background-color: #ffffff;
             border-radius: 12px;
             padding: 20px 25px;
             margin-bottom: 18px;
@@ -128,13 +101,13 @@
         .question-card .q-number {
             font-size: 12px;
             font-weight: 700;
-            color: #7c5cfc;                   /* <-- "Question X" label color */
+            color: #7c5cfc;
             margin-bottom: 6px;
         }
 
         .question-card .q-text {
             font-size: 15px;
-            color: #222222;                   /* <-- question text color */
+            color: #222222;
             margin-bottom: 12px;
         }
 
@@ -147,10 +120,7 @@
             font-size: 14px;
         }
 
-
-        /* ================================
-           SUBMIT BUTTON
-           ================================ */
+        /* SUBMIT BUTTON */
         .submit-btn {
             padding: 12px 34px;
             border-radius: 6px;
@@ -159,24 +129,22 @@
             font-weight: 700;
             font-size: 15px;
             margin-top: 10px;
-
-            background-color: #7c5cfc;        /* <-- submit button background color */
-            color: #ffffff;                   /* <-- submit button text color */
+            background-color: #7c5cfc;
+            color: #ffffff;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .submit-btn:hover {
-            background-color: #6a4ae0;        /* <-- submit button hover color */
+            background-color: #6a4ae0;
         }
 
-
-        /* ================================
-           RESULT BOX (shown after submit)
-           ================================ */
+        /* RESULT BOX */
         .result-box {
             width: 100%;
             max-width: 650px;
             text-align: center;
-
             background-color: #ffffff;
             border-radius: 12px;
             padding: 30px 25px;
@@ -186,24 +154,26 @@
         .result-box h2 {
             font-size: 24px;
             margin-bottom: 10px;
-            color: #222222;                   /* <-- result heading color */
+            color: #222222;
         }
 
         .result-box .result-score {
             font-size: 36px;
             font-weight: 800;
-            color: #7c5cfc;                   /* <-- score number color */
+            color: #7c5cfc;
             margin-bottom: 10px;
         }
 
         .result-box p {
-            color: #666666;                   /* <-- result description color */
+            color: #666666;
         }
-
     </style>
 </head>
 <body>
     <form id="form1" runat="server">
+
+        <!-- Hidden field to store time taken in minutes -->
+        <asp:HiddenField ID="hfTimeTaken" runat="server" Value="0" />
 
         <!-- TOP BAR -->
         <div class="dashboard-topbar">
@@ -214,29 +184,31 @@
         <!-- MAIN CONTENT SECTION -->
         <section class="content-wrapper">
 
-            <!-- Quiz title + info -->
+            <!-- Alert or Info Messages -->
+            <asp:Label ID="lblMessage" runat="server" CssClass="alert-message"></asp:Label>
+
+            <!-- Quiz Title & Info -->
             <div class="welcome-text">
-                <h1>Quiz: <asp:Label ID="lblQuizTitle" runat="server" Text="[Quiz Title]"></asp:Label></h1>
+                <h1>Quiz: <asp:Label ID="lblQuizTitle" runat="server" Text="[Select Quiz]"></asp:Label></h1>
             </div>
             <div class="quiz-info">
                 Time Limit: <asp:Label ID="lblTimeLimit" runat="server" Text="0"></asp:Label> min
                 &nbsp;|&nbsp;
-                Passing Score: <asp:Label ID="lblPassingScore" runat="server" Text="0"></asp:Label>
+                Passing Score: <asp:Label ID="lblPassingScore" runat="server" Text="0"></asp:Label>%
+                &nbsp;|&nbsp;
+                Attempts Used: <asp:Label ID="lblAttemptCount" runat="server" Text="0/3"></asp:Label>
             </div>
 
-            <!-- Questions panel - hidden after submit -->
+            <!-- Questions Panel -->
             <asp:Panel ID="pnlQuiz" runat="server">
 
-                <!-- Repeater loads questions from questionTable - bind its DataSource via Toolbox (Design view) -->
                 <asp:Repeater ID="rptQuestions" runat="server">
                     <ItemTemplate>
                         <div class="question-card">
                             <div class="q-number">Question <%# Container.ItemIndex + 1 %></div>
                             <div class="q-text"><%# Eval("questionText") %></div>
 
-                            <!-- Hidden field keeps track of which question this answer belongs to -->
                             <asp:HiddenField ID="hfQuestionID" runat="server" Value='<%# Eval("questionID") %>' />
-
                             <asp:TextBox ID="txtAnswer" runat="server" CssClass="q-answer-box" placeholder="Type your answer here"></asp:TextBox>
                         </div>
                     </ItemTemplate>
@@ -246,7 +218,7 @@
 
             </asp:Panel>
 
-            <!-- Result panel - shown only after submit -->
+            <!-- Result Panel -->
             <asp:Panel ID="pnlResult" runat="server" CssClass="result-box" Visible="false">
                 <h2>Quiz Completed!</h2>
                 <div class="result-score"><asp:Label ID="lblScore" runat="server"></asp:Label></div>
@@ -256,5 +228,22 @@
         </section>
 
     </form>
+
+    <!-- JavaScript to calculate elapsed time before submit -->
+    <script type="text/javascript">
+        let startTime = new Date();
+
+        document.getElementById('<%= btnSubmitQuiz.ClientID %>')?.addEventListener('click', function () {
+            let endTime = new Date();
+            let timeTakenMinutes = Math.round((endTime - startTime) / 1000 / 60);
+
+            // Record at least 1 minute if submitted under 60 seconds
+            if (timeTakenMinutes < 1) {
+                timeTakenMinutes = 1;
+            }
+
+            document.getElementById('<%= hfTimeTaken.ClientID %>').value = timeTakenMinutes;
+        });
+    </script>
 </body>
 </html>
