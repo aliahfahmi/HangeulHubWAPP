@@ -47,13 +47,17 @@
            TOP BAR (title + logout button)
            ================================ */
         .dashboard-topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 40px;
-
-            background-color: #ffffff;        /* <-- top bar background color */
-        }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 50px;
+    background: white;
+}
+        .topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
 
         .dashboard-topbar h2 {
             color: #222222;                   /* <-- title text color */
@@ -61,19 +65,21 @@
         }
 
         .logout-btn {
-            padding: 10px 22px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 14px;
+    background: #6C63FF;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
 
-            background-color: #7c5cfc;        /* <-- logout button background color */
-            color: #ffffff;                   /* <-- logout button text color */
-        }
+.logout-btn:hover {
+    background: #574fd6;
+}
 
-        .logout-btn:hover {
-            background-color: #6a4ae0;        /* <-- logout button hover color */
-        }
 
 
         /* ================================
@@ -163,18 +169,49 @@
             color: #666666;                   /* <-- card description color */
         }
 
+.dashboard-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.header-actions{
+    display:flex;
+    gap:15px;
+}
+
+
     </style>
 </head>
 
 <body>
 
     <form id="form1" runat="server">
-
         <!-- TOP BAR -->
-        <div class="dashboard-topbar">
-            <h2>Student Dashboard</h2>
-            <asp:LinkButton ID="btnLogout" runat="server" OnClick="btnLogout_Click" CssClass="logout-btn">Log Out</asp:LinkButton>
-        </div>
+<div class="dashboard-topbar">
+
+    <h2>Student Dashboard</h2>
+
+    <div class="topbar-actions">
+
+        <asp:HyperLink
+            ID="lnkAccount"
+            runat="server"
+            NavigateUrl="~/Account/EditProfile.aspx"
+            CssClass="account-btn">
+            ⚙ Account Settings
+        </asp:HyperLink>
+
+        <asp:Button
+            ID="btnLogout"
+            runat="server"
+            Text="Log Out"
+            CssClass="logout-btn"
+            OnClick="btnLogout_Click" />
+
+    </div>
+
+</div>
 
         <!-- MAIN CONTENT SECTION -->
         <section class="dashboard-wrapper">
