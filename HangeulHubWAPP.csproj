@@ -161,7 +161,9 @@
     <Content Include="Home.aspx" />
     <Content Include="index.html" />
     <Content Include="Instructor\InstructorDashboard.aspx" />
+    <Content Include="Instructor\ManageAnnouncements.aspx" />
     <Content Include="Instructor\ManageLesson.aspx" />
+    <Content Include="Instructor\ManageQuizzes.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -296,12 +298,26 @@
     <Compile Include="Instructor\InstructorDashboard.aspx.designer.cs">
       <DependentUpon>InstructorDashboard.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Instructor\ManageAnnouncements.aspx.cs">
+      <DependentUpon>ManageAnnouncements.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Instructor\ManageAnnouncements.aspx.designer.cs">
+      <DependentUpon>ManageAnnouncements.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Instructor\ManageLesson.aspx.cs">
       <DependentUpon>ManageLesson.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Instructor\ManageLesson.aspx.designer.cs">
       <DependentUpon>ManageLesson.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Instructor\ManageQuizzes.aspx.cs">
+      <DependentUpon>ManageQuizzes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Instructor\ManageQuizzes.aspx.designer.cs">
+      <DependentUpon>ManageQuizzes.aspx</DependentUpon>
     </Compile>
     <Compile Include="Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>

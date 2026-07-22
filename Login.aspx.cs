@@ -44,7 +44,7 @@ namespace HangeulHubWAPP
                             Response.Redirect("~/Student/StudentDashboard.aspx");
                             break;
 
-                        case "Instructor":
+                        case "Language Instructor":
                             Response.Redirect("~/Instructor/InstructorDashboard.aspx");
                             break;
 
