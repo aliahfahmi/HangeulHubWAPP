@@ -195,6 +195,8 @@
                 Time Limit: <asp:Label ID="lblTimeLimit" runat="server" Text="0"></asp:Label> min
                 &nbsp;|&nbsp;
                 Passing Score: <asp:Label ID="lblPassingScore" runat="server" Text="0"></asp:Label>%
+                &nbsp;|&nbsp;
+                Attempts Used: <asp:Label ID="lblAttemptCount" runat="server" Text="0/3"></asp:Label>
             </div>
 
             <!-- Questions Panel -->
