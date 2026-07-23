@@ -45,7 +45,7 @@
                             </li>
 
                             <li>
-                                <a runat="server" href="~/About.aspx">
+                                <a href="Home.aspx#about">
                                     About
                                 </a>
                             </li>

@@ -119,6 +119,7 @@
     <Content Include="assets\fonts\flexslider-icon.svg" />
     <Content Include="assets\fonts\fontawesome-webfont.svg" />
     <Content Include="assets\fonts\slick.svg" />
+    <Content Include="assets\images\avatar.png" />
     <Content Include="assets\images\banner-bg.png" />
     <Content Include="assets\images\blog-item-01.png" />
     <Content Include="assets\images\blog-item-02.png" />
@@ -129,6 +130,7 @@
     <Content Include="assets\images\left-image.png" />
     <Content Include="assets\images\logo.png" />
     <Content Include="assets\images\LogoHangeulHub.png" />
+    <Content Include="assets\images\mascot.png" />
     <Content Include="assets\images\right-image.png" />
     <Content Include="assets\images\testimonial-icon.png" />
     <Content Include="assets\images\work-process-bg.png" />
