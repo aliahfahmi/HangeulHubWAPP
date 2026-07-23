@@ -222,6 +222,9 @@
                 <asp:LinkButton ID="btnSearch" runat="server" CssClass="back-btn">Search</asp:LinkButton>
             </div>
 
+            <!-- TEMPORARY DIAGNOSTIC LABEL - remove once data shows up correctly -->
+            <asp:Label ID="lblDebug" runat="server" ForeColor="Red" Font-Bold="true"></asp:Label>
+
             <!-- GridView - fully declarative: edit/update/cancel and data
                  binding all handled by SqlDataSourceUsers below, same
                  "wire it up, no code-behind" approach as Leaderboard.aspx -->
@@ -269,6 +272,7 @@
             <asp:SqlDataSource ID="SqlDataSourceUsers" runat="server"
                 ConnectionString="<%$ ConnectionStrings:ConnectionString %>"
                 OldValuesParameterFormatString="{0}"
+                OnSelected="SqlDataSourceUsers_Selected"
                 SelectCommand="SELECT UserID, name AS Name, email AS Email, role AS Role, stat AS Status, regdate AS RegisteredDate FROM userTable WHERE (@search = '' OR name LIKE '%' + @search + '%' OR email LIKE '%' + @search + '%') AND (@role = '' OR role = @role) AND (@status = '' OR stat = @status) ORDER BY regdate DESC"
                 UpdateCommand="UPDATE userTable SET name=@Name, email=@Email, role=@Role, stat=@Status WHERE UserID=@UserID">
                 <SelectParameters>

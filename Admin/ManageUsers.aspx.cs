@@ -24,6 +24,19 @@ namespace HangeulHubWAPP.Admin
             }
         }
 
+        protected void SqlDataSourceUsers_Selected(object sender, SqlDataSourceStatusEventArgs e)
+        {
+            if (e.Exception != null)
+            {
+                lblDebug.Text = "DB ERROR: " + e.Exception.Message;
+                e.ExceptionHandled = true;
+            }
+            else
+            {
+                lblDebug.Text = "Rows returned: " + e.AffectedRows;
+            }
+        }
+
         protected void btnBack_Click(object sender, EventArgs e)
         {
             Response.Redirect("AdminDashboard.aspx");
