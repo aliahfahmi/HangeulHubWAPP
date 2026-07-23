@@ -137,16 +137,6 @@
             margin-bottom: 6px;
         }
 
-        .ask-dropdown {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #dddddd;
-            border-radius: 6px;
-            font-family: 'Poppins', Arial, sans-serif;
-            font-size: 14px;
-            margin-bottom: 15px;
-        }
-
         .ask-textbox {
             width: 100%;
             min-height: 90px;
@@ -175,6 +165,34 @@
             background-color: #6a4ae0;        /* <-- post button hover color */
         }
 
+        /* ================================
+           FILTER BAR
+           ================================ */
+        .filter-bar {
+            width: 100%;
+            max-width: 650px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .filter-bar label {
+            font-size: 14px;
+            color: #666666;                   /* <-- filter label text color */
+            font-weight: 600;
+        }
+
+        .filter-dropdown {
+            padding: 8px 12px;
+            border: 1px solid #dddddd;
+            border-radius: 6px;
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 14px;
+            background-color: #ffffff;        /* <-- dropdown background color */
+            color: #222222;                   /* <-- dropdown text color */
+        }
+
 
         /* ================================
            FORUM POST CARD (Repeater item)
@@ -200,6 +218,7 @@
             font-size: 15px;
             color: #222222;                   /* <-- question text color */
             margin-bottom: 12px;
+            white-space: pre-line;
         }
 
         .post-card .post-status {
@@ -260,16 +279,20 @@
             <div class="ask-box">
                 <h4>Ask a Question</h4>
 
-                <label>Select Instructor</label>
-                <asp:DropDownList ID="ddlLecturer" runat="server" CssClass="ask-dropdown"
-                    DataTextField="Name"
-                    DataValueField="UserID">
-                </asp:DropDownList>
-
                 <label>Your Question</label>
                 <asp:TextBox ID="txtQuestion" runat="server" CssClass="ask-textbox" TextMode="MultiLine" placeholder="Type your question here..."></asp:TextBox>
 
                 <asp:Button ID="btnPostQuestion" runat="server" Text="Post Question" CssClass="post-btn" OnClick="btnPostQuestion_Click" />
+            </div>
+
+            <!-- FILTER / SORT OPTIONS -->
+            <div class="filter-bar">
+                <label>Sort by:</label>
+                <asp:DropDownList ID="ddlFilter" runat="server" CssClass="filter-dropdown" AutoPostBack="true" OnSelectedIndexChanged="ddlFilter_SelectedIndexChanged">
+                <asp:ListItem Text="Latest" Value="Latest" />
+                <asp:ListItem Text="Oldest" Value="Oldest" />
+                <asp:ListItem Text="Answered" Value="Answered" />
+                </asp:DropDownList>
             </div>
 
             <!-- LIST OF THE STUDENT'S OWN FORUM POSTS -->

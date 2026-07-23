@@ -20,45 +20,36 @@ namespace HangeulHubWAPP.Student
 
             if (!IsPostBack)
             {
-                LoadLecturers();
-                LoadForumPosts();
+                LoadForumPosts("Latest");
             }
         }
 
-        // Fills the "Select Instructor" dropdown from userTable
-        // ASSUMPTION: userTable has a Role column marking lecturers (e.g. Role = 'Lecturer')
-        // and a Name column. Adjust column names below if yours differ.
-        private void LoadLecturers()
+        // Loads forum posts based on the selected filter
+        private void LoadForumPosts(string filter)
         {
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string sql = "SELECT UserID, Name FROM userTable WHERE Role = 'Lecturer'";
-                SqlCommand cmd = new SqlCommand(sql, conn);
+                string sql = @"SELECT ForumID, studentID, questionText, questionDate, responseText, responseDate, stat 
+                       FROM forumTable ";
 
-                conn.Open();
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
+                // Answered filter only shows posts that have a response
+                if (filter == "Answered")
+                {
+                    sql += " WHERE stat = 'Answered' ";
+                }
 
-                ddlLecturer.DataSource = dt;
-                ddlLecturer.DataBind();
-            }
-        }
-
-        // Loads only the logged-in student's own forum posts, newest first
-        private void LoadForumPosts()
-        {
-            string studentID = Session["UserID"].ToString();
-
-            using (SqlConnection conn = new SqlConnection(connStr))
-            {
-                string sql = @"SELECT ForumID, questionText, questionDate, responseText, responseDate, stat 
-                               FROM forumTable 
-                               WHERE studentID = @studentID 
-                               ORDER BY questionDate DESC";
+                // Sort order changes based on filter
+                if (filter == "Oldest")
+                {
+                    sql += " ORDER BY questionDate ASC";
+                }
+                else
+                {
+                    // Latest and Answered both show newest first
+                    sql += " ORDER BY questionDate DESC";
+                }
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@studentID", studentID);
 
                 conn.Open();
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -68,6 +59,12 @@ namespace HangeulHubWAPP.Student
                 rptForumPosts.DataSource = dt;
                 rptForumPosts.DataBind();
             }
+        }
+
+        // Runs when the student changes the filter dropdown
+        protected void ddlFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LoadForumPosts(ddlFilter.SelectedValue);
         }
 
         // Runs when the student clicks "Post Question"
@@ -81,7 +78,6 @@ namespace HangeulHubWAPP.Student
             }
 
             string studentID = Session["UserID"].ToString();
-            string lecturerID = ddlLecturer.SelectedValue;
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
@@ -91,13 +87,12 @@ namespace HangeulHubWAPP.Student
                 string newForumID = "F" + DateTime.Now.Ticks.ToString().Substring(10);
 
                 string sqlInsert = @"INSERT INTO forumTable 
-                                      (ForumID, studentID, lecturerID, questionText, questionDate, stat) 
-                                      VALUES (@ForumID, @studentID, @lecturerID, @questionText, @questionDate, @stat)";
+                                      (ForumID, studentID, questionText, questionDate, stat) 
+                                      VALUES (@ForumID, @studentID, @questionText, @questionDate, @stat)";
 
                 SqlCommand cmd = new SqlCommand(sqlInsert, conn);
                 cmd.Parameters.AddWithValue("@ForumID", newForumID);
                 cmd.Parameters.AddWithValue("@studentID", studentID);
-                cmd.Parameters.AddWithValue("@lecturerID", lecturerID);
                 cmd.Parameters.AddWithValue("@questionText", questionText);
                 cmd.Parameters.AddWithValue("@questionDate", DateTime.Now);
                 cmd.Parameters.AddWithValue("@stat", "Pending");
@@ -108,6 +103,11 @@ namespace HangeulHubWAPP.Student
             // clear the textbox and refresh the list to show the new question
             txtQuestion.Text = "";
             LoadForumPosts();
+        }
+
+        private void LoadForumPosts()
+        {
+            throw new NotImplementedException();
         }
 
         protected void btnBack_Click(object sender, EventArgs e)
