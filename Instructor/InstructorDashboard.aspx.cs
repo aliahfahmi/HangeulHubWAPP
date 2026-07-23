@@ -46,6 +46,18 @@ namespace HangeulHubWAPP.Instructor
                 lblIntermediateAdvanced.Text = GetCount(
                     "SELECT COUNT(*) FROM lessonTable WHERE courseID IN ('C002', 'C003')", con).ToString();
             }
+
+            // Hani's message reacts to the same open-question count shown in lblOpenQuestions -
+            // set after the block above so lblOpenQuestions.Text is already populated.
+            int openCount = 0;
+            int.TryParse(lblOpenQuestions.Text, out openCount);
+
+            if (openCount == 0)
+                litHaniMessage.Text = "🐰 Hani says: “All caught up! Great work!”";
+            else if (openCount <= 3)
+                litHaniMessage.Text = $"🐰 Hani says: “You have {openCount} student(s) waiting for help.”";
+            else
+                litHaniMessage.Text = "🐰 Hani says: “Your students need you today!”";
         }
 
         private int GetCount(string query, SqlConnection con)

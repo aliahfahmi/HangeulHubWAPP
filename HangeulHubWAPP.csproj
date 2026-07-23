@@ -165,8 +165,8 @@
     <Content Include="ForgotPassword.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Guest\GuestQuestion.aspx" />
-    <Content Include="Hani Mascot\Generated image 1.png" />
     <Content Include="Home.aspx" />
+    <Content Include="Images\hani-instructor-mascot.png" />
     <Content Include="index.html" />
     <Content Include="Instructor\InstructorDashboard.aspx" />
     <Content Include="Instructor\ManageAnnouncements.aspx" />
