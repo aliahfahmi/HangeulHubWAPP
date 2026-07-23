@@ -109,6 +109,7 @@
             font-size: 15px;
             color: #222222;
             margin-bottom: 12px;
+            white-space: pre-line;
         }
 
         .question-card .q-answer-box {

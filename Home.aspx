@@ -54,7 +54,7 @@ Inherits="HangeulHubWAPP.Home" %>
         <div class="section-title-custom">
 
             <!-- ***** Why user's choice ***** -->
-<section class="community-section">
+<section id="about" class="community-section">
 
     <div class="container">
 
