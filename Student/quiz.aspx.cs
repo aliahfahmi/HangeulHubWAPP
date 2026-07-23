@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -18,7 +19,6 @@ namespace HangeulHubWAPP.Student
             {
                 try
                 {
-                    // Verify Session
                     if (Session["UserID"] == null)
                     {
                         Response.Redirect("~/Login.aspx", false);
@@ -26,29 +26,34 @@ namespace HangeulHubWAPP.Student
                         return;
                     }
 
-                    string level = Request.QueryString["level"] ?? "Beginner";
-                    string instructorID = Request.QueryString["instructorID"];
+                    string quizID = Request.QueryString["quizID"];
 
-                    ViewState["CurrentLevel"] = level;
+                    if (string.IsNullOrEmpty(quizID))
+                    {
+                        // No quiz selected - send them back to pick one
+                        Response.Redirect("StudentQuizDashboard.aspx");
+                        return;
+                    }
 
-                    LoadQuizHeader(level);
+                    ViewState["CurrentQuizID"] = quizID;
 
-                    // Check student attempt count before loading questions
                     string studentID = Session["UserID"].ToString();
-                    string primaryQuizID = GetPrimaryQuizIDForLevel(level, instructorID);
-                    ViewState["PrimaryQuizID"] = primaryQuizID;
 
-                    int attemptsUsed = GetUserAttemptsCount(studentID, primaryQuizID);
+                    LoadQuizHeader(quizID);
+
+                    int attemptsUsed = GetUserAttemptsCount(studentID, quizID);
                     lblAttemptCount.Text = $"{attemptsUsed}/{MAX_ATTEMPTS}";
 
                     if (attemptsUsed >= MAX_ATTEMPTS)
                     {
+                        // Show their best score instead of letting them retry
                         pnlQuiz.Visible = false;
-                        lblMessage.Text = $"You have reached the maximum attempt limit of {MAX_ATTEMPTS} for this quiz.";
+                        int bestScore = GetBestScoreForQuiz(studentID, quizID);
+                        lblMessage.Text = $"You have used all {MAX_ATTEMPTS} attempts for this quiz. Your best score was {bestScore}%.";
                         return;
                     }
 
-                    LoadQuestionsByDifficulty(level, instructorID);
+                    LoadQuestions(quizID);
                 }
                 catch (Exception ex)
                 {
@@ -57,30 +62,26 @@ namespace HangeulHubWAPP.Student
             }
         }
 
-        private string GetPrimaryQuizIDForLevel(string level, string instructorID)
+        private void LoadQuizHeader(string quizID)
         {
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string query = @"SELECT TOP 1 q.quizID 
-                                 FROM quizTable q 
-                                 WHERE q.diffLevel = @level";
-
-                if (!string.IsNullOrEmpty(instructorID))
-                {
-                    query += " AND q.instructorID = @instructorID";
-                }
+                string query = "SELECT title, timelimit, passingScore FROM quizTable WHERE quizID = @quizID";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@level", level);
-                    if (!string.IsNullOrEmpty(instructorID))
-                    {
-                        cmd.Parameters.AddWithValue("@instructorID", instructorID);
-                    }
-
+                    cmd.Parameters.AddWithValue("@quizID", quizID);
                     conn.Open();
-                    object res = cmd.ExecuteScalar();
-                    return res != null ? res.ToString() : "Q001";
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            lblQuizTitle.Text = dr["title"].ToString();
+                            lblTimeLimit.Text = dr["timelimit"] != DBNull.Value ? dr["timelimit"].ToString() : "N/A";
+                            lblPassingScore.Text = dr["passingScore"] != DBNull.Value ? dr["passingScore"].ToString() : "70";
+                        }
+                    }
                 }
             }
         }
@@ -100,59 +101,30 @@ namespace HangeulHubWAPP.Student
             }
         }
 
-        private void LoadQuizHeader(string level)
+        private int GetBestScoreForQuiz(string studentID, string quizID)
         {
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string query = @"SELECT TOP 1 title, timelimit, passingScore 
-                                 FROM quizTable 
-                                 WHERE diffLevel = @level";
-
+                string query = "SELECT ISNULL(MAX(score), 0) FROM quizAttemptTable WHERE studentID = @studentID AND quizID = @quizID";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@level", level);
+                    cmd.Parameters.AddWithValue("@studentID", studentID);
+                    cmd.Parameters.AddWithValue("@quizID", quizID);
                     conn.Open();
-
-                    using (SqlDataReader dr = cmd.ExecuteReader())
-                    {
-                        if (dr.Read())
-                        {
-                            lblQuizTitle.Text = $"{level} Assessment";
-                            lblTimeLimit.Text = dr["timelimit"] != DBNull.Value ? dr["timelimit"].ToString() : "N/A";
-                            lblPassingScore.Text = dr["passingScore"] != DBNull.Value ? dr["passingScore"].ToString() : "70";
-                        }
-                        else
-                        {
-                            lblQuizTitle.Text = $"{level} Assessment";
-                            lblTimeLimit.Text = "N/A";
-                            lblPassingScore.Text = "70";
-                        }
-                    }
+                    return Convert.ToInt32(cmd.ExecuteScalar());
                 }
             }
         }
 
-        private void LoadQuestionsByDifficulty(string level, string instructorID)
+        private void LoadQuestions(string quizID)
         {
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string query = @"SELECT qn.questionID, qn.questionText, qn.quizID 
-                                 FROM questionTable qn
-                                 INNER JOIN quizTable q ON qn.quizID = q.quizID
-                                 WHERE q.diffLevel = @level";
-
-                if (!string.IsNullOrEmpty(instructorID))
-                {
-                    query += " AND q.instructorID = @instructorID";
-                }
+                string query = "SELECT questionID, questionText FROM questionTable WHERE quizID = @quizID";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@level", level);
-                    if (!string.IsNullOrEmpty(instructorID))
-                    {
-                        cmd.Parameters.AddWithValue("@instructorID", instructorID);
-                    }
+                    cmd.Parameters.AddWithValue("@quizID", quizID);
 
                     using (SqlDataAdapter da = new SqlDataAdapter(cmd))
                     {
@@ -166,7 +138,7 @@ namespace HangeulHubWAPP.Student
                         }
                         else
                         {
-                            lblMessage.Text = $"No questions found for difficulty level: {level}";
+                            lblMessage.Text = "No questions found for this quiz.";
                             btnSubmitQuiz.Visible = false;
                         }
                     }
@@ -179,17 +151,15 @@ namespace HangeulHubWAPP.Student
             try
             {
                 string studentID = Session["UserID"] != null ? Session["UserID"].ToString() : "";
-                string level = ViewState["CurrentLevel"] != null ? ViewState["CurrentLevel"].ToString() : "Beginner";
-                string primaryQuizID = ViewState["PrimaryQuizID"] != null ? ViewState["PrimaryQuizID"].ToString() : "Q001";
+                string quizID = ViewState["CurrentQuizID"] != null ? ViewState["CurrentQuizID"].ToString() : "";
 
-                if (string.IsNullOrEmpty(studentID))
+                if (string.IsNullOrEmpty(studentID) || string.IsNullOrEmpty(quizID))
                 {
-                    lblMessage.Text = "Session expired. Please log in again to save your score.";
+                    lblMessage.Text = "Session expired or quiz not found. Please try again.";
                     return;
                 }
 
-                // Guard check: ensure attempt limit hasn't been bypassed
-                int currentAttempts = GetUserAttemptsCount(studentID, primaryQuizID);
+                int currentAttempts = GetUserAttemptsCount(studentID, quizID);
                 if (currentAttempts >= MAX_ATTEMPTS)
                 {
                     lblMessage.Text = $"You have already reached the maximum limit of {MAX_ATTEMPTS} attempts.";
@@ -204,7 +174,6 @@ namespace HangeulHubWAPP.Student
                 {
                     conn.Open();
 
-                    // 1. Grade each submitted question
                     foreach (RepeaterItem item in rptQuestions.Items)
                     {
                         if (item.ItemType == ListItemType.Item || item.ItemType == ListItemType.AlternatingItem)
@@ -240,12 +209,10 @@ namespace HangeulHubWAPP.Student
                     int scorePercentage = totalQuestions > 0 ? (int)Math.Round((double)correctAnswersCount / totalQuestions * 100) : 0;
                     int nextAttemptNumber = currentAttempts + 1;
 
-                    // 2. Read Time Taken from Hidden Field
                     int timeTakenInMinutes = 1;
                     int.TryParse(hfTimeTaken.Value, out timeTakenInMinutes);
                     if (timeTakenInMinutes < 1) timeTakenInMinutes = 1;
 
-                    // 3. Save Attempt Details to quizAttemptTable
                     string newAttemptID = "ATT" + Guid.NewGuid().ToString("N").Substring(0, 6).ToUpper();
                     string insertAttempt = @"INSERT INTO quizAttemptTable (attemptID, studentID, quizID, attemptNumber, score, dateTaken, timeTaken)
                                              VALUES (@attemptID, @studentID, @quizID, @attemptNumber, @score, GETDATE(), @timeTaken)";
@@ -254,7 +221,7 @@ namespace HangeulHubWAPP.Student
                     {
                         cmdInsert.Parameters.AddWithValue("@attemptID", newAttemptID);
                         cmdInsert.Parameters.AddWithValue("@studentID", studentID);
-                        cmdInsert.Parameters.AddWithValue("@quizID", primaryQuizID);
+                        cmdInsert.Parameters.AddWithValue("@quizID", quizID);
                         cmdInsert.Parameters.AddWithValue("@attemptNumber", nextAttemptNumber);
                         cmdInsert.Parameters.AddWithValue("@score", scorePercentage);
                         cmdInsert.Parameters.AddWithValue("@timeTaken", timeTakenInMinutes);
@@ -262,7 +229,6 @@ namespace HangeulHubWAPP.Student
                         cmdInsert.ExecuteNonQuery();
                     }
 
-                    // 4. Update UI labels and show results
                     lblAttemptCount.Text = $"{nextAttemptNumber}/{MAX_ATTEMPTS}";
 
                     int passingScore = 70;
@@ -275,21 +241,20 @@ namespace HangeulHubWAPP.Student
 
                     if (scorePercentage >= passingScore)
                     {
-                        lblResultMessage.Text = $"Congratulations! You passed the {level} quiz on Attempt #{nextAttemptNumber} in {timeTakenInMinutes} min!";
+                        lblResultMessage.Text = $"Congratulations! You passed on Attempt #{nextAttemptNumber} in {timeTakenInMinutes} min!";
                     }
                     else
                     {
                         lblResultMessage.Text = $"Attempt #{nextAttemptNumber} ({timeTakenInMinutes} min taken): You did not reach the passing score.";
                         if (nextAttemptNumber < MAX_ATTEMPTS)
-                        {
                             lblResultMessage.Text += $" You have {MAX_ATTEMPTS - nextAttemptNumber} attempt(s) remaining.";
-                        }
                         else
-                        {
-                            lblResultMessage.Text += $" You have reached the maximum attempt limit.";
-                        }
+                            lblResultMessage.Text += " You have reached the maximum attempt limit.";
                     }
                 }
+
+                // Recalculate this student's overall leaderboard total + everyone's rank
+                UpdateLeaderboardTotal(studentID);
             }
             catch (Exception ex)
             {
@@ -297,9 +262,103 @@ namespace HangeulHubWAPP.Student
             }
         }
 
+        // Sums the student's BEST score from every quiz they've attempted,
+        // then saves it as their leaderboard totalScore.
+        private void UpdateLeaderboardTotal(string studentID)
+        {
+            int newTotalScore;
+
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+
+                string sumQuery = @"SELECT ISNULL(SUM(BestScores.bestScore), 0)
+                                     FROM (
+                                         SELECT quizID, MAX(score) AS bestScore
+                                         FROM quizAttemptTable
+                                         WHERE studentID = @studentID
+                                         GROUP BY quizID
+                                     ) AS BestScores";
+
+                using (SqlCommand cmdSum = new SqlCommand(sumQuery, conn))
+                {
+                    cmdSum.Parameters.AddWithValue("@studentID", studentID);
+                    newTotalScore = Convert.ToInt32(cmdSum.ExecuteScalar());
+                }
+
+                string checkQuery = "SELECT COUNT(*) FROM leaderboardTable WHERE studentID = @studentID";
+                bool exists;
+                using (SqlCommand cmdCheck = new SqlCommand(checkQuery, conn))
+                {
+                    cmdCheck.Parameters.AddWithValue("@studentID", studentID);
+                    exists = Convert.ToInt32(cmdCheck.ExecuteScalar()) > 0;
+                }
+
+                if (exists)
+                {
+                    string updateQuery = "UPDATE leaderboardTable SET totalScore = @totalScore WHERE studentID = @studentID";
+                    using (SqlCommand cmdUpdate = new SqlCommand(updateQuery, conn))
+                    {
+                        cmdUpdate.Parameters.AddWithValue("@totalScore", newTotalScore);
+                        cmdUpdate.Parameters.AddWithValue("@studentID", studentID);
+                        cmdUpdate.ExecuteNonQuery();
+                    }
+                }
+                else
+                {
+                    string newLeaderboardID = "LB" + DateTime.Now.Ticks.ToString().Substring(10);
+                    string insertQuery = @"INSERT INTO leaderboardTable (leaderboardID, studentID, totalScore, rank)
+                                            VALUES (@leaderboardID, @studentID, @totalScore, 0)";
+                    using (SqlCommand cmdInsert = new SqlCommand(insertQuery, conn))
+                    {
+                        cmdInsert.Parameters.AddWithValue("@leaderboardID", newLeaderboardID);
+                        cmdInsert.Parameters.AddWithValue("@studentID", studentID);
+                        cmdInsert.Parameters.AddWithValue("@totalScore", newTotalScore);
+                        cmdInsert.ExecuteNonQuery();
+                    }
+                }
+            }
+
+            RecalculateRanks();
+        }
+
+        // Re-ranks EVERY student in leaderboardTable, highest totalScore = rank 1
+        private void RecalculateRanks()
+        {
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+
+                List<string> orderedIDs = new List<string>();
+
+                string selectQuery = "SELECT leaderboardID FROM leaderboardTable ORDER BY totalScore DESC";
+                using (SqlCommand cmdSelect = new SqlCommand(selectQuery, conn))
+                using (SqlDataReader reader = cmdSelect.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        orderedIDs.Add(reader["leaderboardID"].ToString());
+                    }
+                }
+
+                int currentRank = 1;
+                foreach (string id in orderedIDs)
+                {
+                    string updateRankQuery = "UPDATE leaderboardTable SET rank = @rank WHERE leaderboardID = @id";
+                    using (SqlCommand cmdUpdateRank = new SqlCommand(updateRankQuery, conn))
+                    {
+                        cmdUpdateRank.Parameters.AddWithValue("@rank", currentRank);
+                        cmdUpdateRank.Parameters.AddWithValue("@id", id);
+                        cmdUpdateRank.ExecuteNonQuery();
+                    }
+                    currentRank++;
+                }
+            }
+        }
+
         protected void btnBack_Click(object sender, EventArgs e)
         {
-            Response.Redirect("~/Student/StudentDashboard.aspx");
+            Response.Redirect("StudentQuizDashboard.aspx");
         }
     }
 }

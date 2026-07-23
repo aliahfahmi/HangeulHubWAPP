@@ -242,7 +242,7 @@
                     <p>Continue lessons from Beginner to Advanced.</p>
                 </a>
 
-                <a href="Quiz.aspx" class="dash-card">
+                <a href="StudentQuizDashboard.aspx" class="dash-card">
                     <i class="fa fa-pencil"></i>
                     <h4>Attempt Quiz</h4>
                     <p>Test what you've learned so far.</p>
