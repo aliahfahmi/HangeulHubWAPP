@@ -28,6 +28,12 @@
 
         .topbar h2 { font-size: 24px; }
 
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
         .logout-btn {
             background: #7c5cfc;
             color: white;
@@ -39,15 +45,35 @@
 
         .logout-btn:hover { background: #6847e8; }
 
+
+        .account-btn {
+            color: #7c5cfc;
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: 1px solid #e2e0f5;
+        }
+
+        .account-btn:hover { background: #f4f2ff; }
+
         .wrapper {
             max-width: 1200px;
             margin: auto;
             padding: 35px 25px 50px;
         }
 
+        /* ---------- Welcome / mascot section ---------- */
         .welcome {
-            text-align: center;
+            background: linear-gradient(135deg, #eeeaff, #ffffff);
+            border-radius: 20px;
+            padding: 26px 42px;
             margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-align: left;
+            overflow: hidden;
         }
 
         .welcome h1 {
@@ -60,6 +86,26 @@
         .welcome p {
             color: #666;
             margin-top: 8px;
+        }
+
+        .hani-mascot {
+            width: 165px;
+            max-height: 180px;
+            object-fit: contain;
+            margin-left: 25px;
+            flex-shrink: 0;
+        }
+
+        .hani-message {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 9px 14px;
+            border-radius: 999px;
+            background: #ffffff;
+            color: #7c5cfc;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 3px 10px rgba(124,92,252,.12);
         }
 
         .stats-row, .action-row {
@@ -153,7 +199,9 @@
         @media (max-width: 600px) {
             .topbar { padding: 16px 20px; }
             .topbar h2 { font-size: 18px; }
+            .welcome { flex-direction: column; text-align: center; }
             .welcome h1 { font-size: 25px; }
+            .hani-mascot { margin: 16px 0 0; }
         }
     </style>
 </head>
@@ -163,15 +211,34 @@
 
     <div class="topbar">
         <h2>Instructor Dashboard</h2>
-        <asp:LinkButton ID="btnLogout" runat="server"
-            OnClick="btnLogout_Click" CssClass="logout-btn">Log Out</asp:LinkButton>
+        <div class="topbar-actions">
+            <asp:HyperLink
+                ID="lnkAccount"
+                runat="server"
+                NavigateUrl="~/Account/EditProfile.aspx"
+                CssClass="account-btn">
+                &#9881; Account Settings
+            </asp:HyperLink>
+
+            <asp:LinkButton ID="btnLogout" runat="server"
+                OnClick="btnLogout_Click" CssClass="logout-btn">Log Out</asp:LinkButton>
+        </div>
     </div>
 
     <main class="wrapper">
 
         <div class="welcome">
-            <h1>Welcome back, <span><asp:Label ID="lblInstructorName" runat="server" Text="Instructor"></asp:Label></span>!</h1>
-            <p>Manage Korean learning content and support your students.</p>
+            <div>
+                <h1>Welcome back, <span><asp:Label ID="lblInstructorName" runat="server" Text="Instructor"></asp:Label></span>!</h1>
+                <p>Manage Korean learning content and support your students.</p>
+                <div class="hani-message">
+                    <asp:Literal ID="litHaniMessage" runat="server">&#128007; Hani says: &ldquo;Let's make today's lesson meaningful!&rdquo;</asp:Literal>
+                </div>
+            </div>
+
+            <img src="../Images/hani-instructor-mascot.png"
+                 class="hani-mascot"
+                 alt="Hani the instructor assistant" />
         </div>
 
         <div class="stats-row">
@@ -188,7 +255,7 @@
             </div>
 
             <div class="stat-card">
-                <i class="fa fa-seedling"></i>
+                <i class="fa fa-leaf"></i>
                 <h3><asp:Label ID="lblBeginner" runat="server" Text="0"></asp:Label></h3>
                 <p>Beginner Lessons</p>
             </div>
@@ -203,7 +270,7 @@
         <h3 class="section-title">Instructor Actions</h3>
 
         <div class="action-row">
-            <a href="ManageLesson.aspx" class="action-card">
+            <a href="ManageLessons.aspx" class="action-card">
                 <i class="fa fa-book"></i>
                 <h4>Manage Lessons</h4>
                 <p>Add, edit, or remove Hangul, vocabulary, and grammar lessons.</p>
