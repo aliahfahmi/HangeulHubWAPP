@@ -104,6 +104,7 @@
     <Content Include="Account\EditProfile.aspx" />
     <Content Include="Admin\AdminDashboard.aspx" />
     <Content Include="Admin\ManageUsers.aspx" />
+    <Content Include="Admin\ManageCourses.aspx" />
     <Content Include="App_Data\userDatabase.mdf" />
     <Content Include="App_Data\userDatabase_log.ldf">
       <DependentUpon>userDatabase.mdf</DependentUpon>
@@ -288,6 +289,13 @@
     </Compile>
     <Compile Include="Admin\ManageUsers.aspx.designer.cs">
       <DependentUpon>ManageUsers.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\ManageCourses.aspx.cs">
+      <DependentUpon>ManageCourses.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\ManageCourses.aspx.designer.cs">
+      <DependentUpon>ManageCourses.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="About.aspx.cs">
