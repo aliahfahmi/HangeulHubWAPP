@@ -67,9 +67,11 @@ OnClick="btnLogout_Click"/>
 
 <div class="sidebar">
 
-<a href="../Student/StudentDashboard.aspx">
-Dashboard
-</a>
+<asp:HyperLink
+    ID="lnkDashboard"
+    runat="server">
+    Dashboard
+</asp:HyperLink>
 
 <a href="EditProfile.aspx">
 Edit Profile
