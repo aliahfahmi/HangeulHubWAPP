@@ -134,6 +134,16 @@
             background-color: #ffffff;
         }
 
+        .status-message {
+            width: 100%;
+            max-width: 900px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #e05555;
+            margin-bottom: 14px;
+        }
+
 
         /* ================================
            USERS TABLE (GridView)
@@ -182,6 +192,13 @@
             border: 1px solid #dddddd;
         }
 
+        .empty-row {
+            text-align: center;
+            padding: 30px 18px;
+            color: #999999;
+            font-size: 14px;
+        }
+
     </style>
 </head>
 <body>
@@ -206,34 +223,36 @@
             <div class="filter-row">
                 <asp:TextBox ID="txtSearch" runat="server" placeholder="Search by name or email..."></asp:TextBox>
 
-                <asp:DropDownList ID="ddlRoleFilter" runat="server" AutoPostBack="true">
+                <asp:DropDownList ID="ddlRoleFilter" runat="server" AutoPostBack="true" OnSelectedIndexChanged="Filter_Changed">
                     <asp:ListItem Text="All Roles" Value="" />
                     <asp:ListItem Text="Student" Value="Student" />
                     <asp:ListItem Text="Language Instructor" Value="Language Instructor" />
                     <asp:ListItem Text="Admin" Value="Admin" />
                 </asp:DropDownList>
 
-                <asp:DropDownList ID="ddlStatusFilter" runat="server" AutoPostBack="true">
+                <asp:DropDownList ID="ddlStatusFilter" runat="server" AutoPostBack="true" OnSelectedIndexChanged="Filter_Changed">
                     <asp:ListItem Text="All Status" Value="" />
                     <asp:ListItem Text="Active" Value="ACTIVE" />
                     <asp:ListItem Text="Inactive" Value="INACTIVE" />
                 </asp:DropDownList>
 
-                <asp:LinkButton ID="btnSearch" runat="server" CssClass="back-btn">Search</asp:LinkButton>
+                <asp:LinkButton ID="btnSearch" runat="server" CssClass="back-btn" OnClick="btnSearch_Click">Search</asp:LinkButton>
             </div>
 
-            <!-- TEMPORARY DIAGNOSTIC LABEL - remove once data shows up correctly -->
-            <asp:Label ID="lblDebug" runat="server" ForeColor="Red" Font-Bold="true"></asp:Label>
+            <!-- Only shows if something goes wrong loading/saving data -->
+            <asp:Label ID="lblMessage" runat="server" CssClass="status-message"></asp:Label>
 
-            <!-- GridView - fully declarative: edit/update/cancel and data
-                 binding all handled by SqlDataSourceUsers below, same
-                 "wire it up, no code-behind" approach as Leaderboard.aspx -->
+            <!-- GridView - bound manually in code-behind (BindGrid), same
+                 ADO.NET style as Login.aspx.cs -->
             <asp:GridView ID="GridViewUsers" runat="server"
                 CssClass="users-table"
                 AutoGenerateColumns="false"
                 GridLines="None"
-                DataSourceID="SqlDataSourceUsers"
-                DataKeyNames="UserID">
+                DataKeyNames="UserID"
+                OnRowEditing="GridViewUsers_RowEditing"
+                OnRowUpdating="GridViewUsers_RowUpdating"
+                OnRowCancelingEdit="GridViewUsers_RowCancelingEdit"
+                OnRowDataBound="GridViewUsers_RowDataBound">
                 <Columns>
                     <asp:BoundField DataField="UserID" HeaderText="User ID" ReadOnly="true" />
                     <asp:BoundField DataField="Name" HeaderText="Name" />
@@ -242,7 +261,7 @@
                     <asp:TemplateField HeaderText="Role">
                         <ItemTemplate><%# Eval("Role") %></ItemTemplate>
                         <EditItemTemplate>
-                            <asp:DropDownList ID="ddlEditRole" runat="server" SelectedValue='<%# Bind("Role") %>'>
+                            <asp:DropDownList ID="ddlEditRole" runat="server">
                                 <asp:ListItem Text="Student" Value="Student" />
                                 <asp:ListItem Text="Language Instructor" Value="Language Instructor" />
                                 <asp:ListItem Text="Admin" Value="Admin" />
@@ -253,7 +272,7 @@
                     <asp:TemplateField HeaderText="Status">
                         <ItemTemplate><%# Eval("Status") %></ItemTemplate>
                         <EditItemTemplate>
-                            <asp:DropDownList ID="ddlEditStatus" runat="server" SelectedValue='<%# Bind("Status") %>'>
+                            <asp:DropDownList ID="ddlEditStatus" runat="server">
                                 <asp:ListItem Text="Active" Value="ACTIVE" />
                                 <asp:ListItem Text="Inactive" Value="INACTIVE" />
                             </asp:DropDownList>
@@ -264,23 +283,11 @@
 
                     <asp:CommandField ShowEditButton="true" ShowCancelButton="true" />
                 </Columns>
-            </asp:GridView>
 
-            <!-- Data source for GridViewUsers - handles both the filtered
-                 select and the row update, no C# needed for either.
-                 Update the ConnectionString name to match your Web.config. -->
-            <asp:SqlDataSource ID="SqlDataSourceUsers" runat="server"
-                ConnectionString="<%$ ConnectionStrings:ConnectionString %>"
-                OldValuesParameterFormatString="{0}"
-                OnSelected="SqlDataSourceUsers_Selected"
-                SelectCommand="SELECT UserID, name AS Name, email AS Email, role AS Role, stat AS Status, regdate AS RegisteredDate FROM userTable WHERE (@search = '' OR name LIKE '%' + @search + '%' OR email LIKE '%' + @search + '%') AND (@role = '' OR role = @role) AND (@status = '' OR stat = @status) ORDER BY regdate DESC"
-                UpdateCommand="UPDATE userTable SET name=@Name, email=@Email, role=@Role, stat=@Status WHERE UserID=@UserID">
-                <SelectParameters>
-                    <asp:ControlParameter Name="search" ControlID="txtSearch" PropertyName="Text" DefaultValue="" />
-                    <asp:ControlParameter Name="role" ControlID="ddlRoleFilter" PropertyName="SelectedValue" DefaultValue="" />
-                    <asp:ControlParameter Name="status" ControlID="ddlStatusFilter" PropertyName="SelectedValue" DefaultValue="" />
-                </SelectParameters>
-            </asp:SqlDataSource>
+                <EmptyDataTemplate>
+                    <div class="empty-row">No users found matching your search.</div>
+                </EmptyDataTemplate>
+            </asp:GridView>
 
         </section>
 
