@@ -254,6 +254,7 @@
     <Content Include="Student\quiz.aspx" />
     <Content Include="Student\StudentDashboard.aspx" />
     <Content Include="Student\studentForum.aspx" />
+    <Content Include="Student\studentQuizDashboard.aspx" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config" />
     <Content Include="Bundle.config" />
@@ -434,6 +435,13 @@
     </Compile>
     <Compile Include="Student\studentForum.aspx.designer.cs">
       <DependentUpon>studentForum.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Student\studentQuizDashboard.aspx.cs">
+      <DependentUpon>studentQuizDashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student\studentQuizDashboard.aspx.designer.cs">
+      <DependentUpon>studentQuizDashboard.aspx</DependentUpon>
     </Compile>
     <Compile Include="ViewSwitcher.ascx.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>
