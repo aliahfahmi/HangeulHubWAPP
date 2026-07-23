@@ -112,6 +112,7 @@
     <Content Include="assets\css\bootstrap.min.css" />
     <Content Include="assets\css\courses.css" />
     <Content Include="assets\css\custom.css" />
+    <Content Include="assets\css\FAQ.css" />
     <Content Include="assets\css\flex-slider.css" />
     <Content Include="assets\css\font-awesome.css" />
     <Content Include="assets\css\login.css" />
@@ -165,6 +166,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Courses.aspx" />
     <Content Include="Default.aspx" />
+    <Content Include="FAQ.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="ForgotPassword.aspx" />
     <Content Include="Global.asax" />
@@ -318,6 +320,13 @@
     </Compile>
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="FAQ.aspx.cs">
+      <DependentUpon>FAQ.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FAQ.aspx.designer.cs">
+      <DependentUpon>FAQ.aspx</DependentUpon>
     </Compile>
     <Compile Include="ForgotPassword.aspx.cs">
       <DependentUpon>ForgotPassword.aspx</DependentUpon>
