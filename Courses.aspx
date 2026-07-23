@@ -123,15 +123,10 @@
                         class="unlock-btn">
 
                         Register to Unlock
-
                     </a>
-
                 </div>
-
             </div>
-
         </ItemTemplate>
-
     </asp:Repeater>
  </div>
 
@@ -144,15 +139,12 @@
     <div class="modal-content">
 
         <h2>
-
             <asp:Label
                 ID="lblTitle"
                 runat="server" />
 
         </h2>
-
         <p>
-
             <strong>Level :</strong>
 
             <asp:Label

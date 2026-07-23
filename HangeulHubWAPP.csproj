@@ -104,6 +104,7 @@
     <Content Include="Account\EditProfile.aspx" />
     <Content Include="Admin\AdminDashboard.aspx" />
     <Content Include="Admin\ManageUsers.aspx" />
+    <Content Include="Admin\ManageCourses.aspx" />
     <Content Include="App_Data\userDatabase.mdf" />
     <Content Include="App_Data\userDatabase_log.ldf">
       <DependentUpon>userDatabase.mdf</DependentUpon>
@@ -112,6 +113,7 @@
     <Content Include="assets\css\bootstrap.min.css" />
     <Content Include="assets\css\courses.css" />
     <Content Include="assets\css\custom.css" />
+    <Content Include="assets\css\FAQ.css" />
     <Content Include="assets\css\flex-slider.css" />
     <Content Include="assets\css\font-awesome.css" />
     <Content Include="assets\css\login.css" />
@@ -165,6 +167,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Courses.aspx" />
     <Content Include="Default.aspx" />
+    <Content Include="FAQ.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="ForgotPassword.aspx" />
     <Content Include="Global.asax" />
@@ -289,6 +292,13 @@
     <Compile Include="Admin\ManageUsers.aspx.designer.cs">
       <DependentUpon>ManageUsers.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Admin\ManageCourses.aspx.cs">
+      <DependentUpon>ManageCourses.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\ManageCourses.aspx.designer.cs">
+      <DependentUpon>ManageCourses.aspx</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="About.aspx.cs">
       <DependentUpon>About.aspx</DependentUpon>
@@ -318,6 +328,13 @@
     </Compile>
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="FAQ.aspx.cs">
+      <DependentUpon>FAQ.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FAQ.aspx.designer.cs">
+      <DependentUpon>FAQ.aspx</DependentUpon>
     </Compile>
     <Compile Include="ForgotPassword.aspx.cs">
       <DependentUpon>ForgotPassword.aspx</DependentUpon>
