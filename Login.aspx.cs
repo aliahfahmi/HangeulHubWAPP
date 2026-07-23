@@ -26,17 +26,16 @@ namespace HangeulHubWAPP
                 cmd.Parameters.AddWithValue("@email", txtEmail.Text.Trim());
                 cmd.Parameters.AddWithValue("@pwd", txtPassword.Text.Trim());
 
-                SqlDataReader dr = cmd.ExecuteReader();
+                SqlDataReader reader = cmd.ExecuteReader();
 
-                if (dr.Read())
+                if (reader.Read())
                 {
-                    // Save user session
-                    Session["UserID"] = dr["UserID"].ToString();
-                    Session["Name"] = dr["name"].ToString();
-                    Session["Email"] = dr["email"].ToString();
-                    Session["Role"] = dr["role"].ToString();
+                    Session["UserID"] = reader["UserID"].ToString();
+                    Session["Name"] = reader["name"].ToString();
+                    Session["Email"] = reader["email"].ToString();
+                    Session["Role"] = reader["role"].ToString();
 
-                    string role = dr["role"].ToString();
+                    string role = reader["role"].ToString().Trim();
 
                     switch (role)
                     {
@@ -61,6 +60,8 @@ namespace HangeulHubWAPP
                 {
                     lblMessage.Text = "Invalid email or password.";
                 }
+
+
             }
         }
 

@@ -155,6 +155,13 @@
             .topbar h2 { font-size: 18px; }
             .welcome h1 { font-size: 25px; }
         }
+
+        .topbar-actions{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
     </style>
 </head>
 
@@ -163,9 +170,21 @@
 
     <div class="topbar">
         <h2>Instructor Dashboard</h2>
+                        <div class="topbar-actions">
+
+        <asp:HyperLink
+            ID="lnkAccount"
+            runat="server"
+            NavigateUrl="~/Account/EditProfile.aspx"
+            CssClass="account-btn">
+            ⚙ Account Settings
+        </asp:HyperLink>
+
         <asp:LinkButton ID="btnLogout" runat="server"
             OnClick="btnLogout_Click" CssClass="logout-btn">Log Out</asp:LinkButton>
     </div>
+        
+                </div>
 
     <main class="wrapper">
 

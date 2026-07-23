@@ -163,6 +163,12 @@
             color: #666666;                   /* <-- card description color */
         }
 
+        .topbar-actions{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
     </style>
 </head>
 
@@ -173,6 +179,17 @@
         <!-- TOP BAR -->
         <div class="dashboard-topbar">
             <h2>Admin Dashboard</h2>
+                <div class="topbar-actions">
+
+        <asp:HyperLink
+            ID="lnkAccount"
+            runat="server"
+            NavigateUrl="~/Account/EditProfile.aspx"
+            CssClass="account-btn">
+            ⚙ Account Settings
+        </asp:HyperLink>
+                </div>
+
             <asp:LinkButton ID="btnLogout" runat="server" OnClick="btnLogout_Click" CssClass="logout-btn">Log Out</asp:LinkButton>
         </div>
 
