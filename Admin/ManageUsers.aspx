@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="ManageUsers.aspx.cs" Inherits="HangeulHubWAPP.Admin.ManageUsers" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ManageUsers.aspx.cs" Inherits="HangeulHubWAPP.Admin.ManageUsers" %>
 
 <!DOCTYPE html>
 
