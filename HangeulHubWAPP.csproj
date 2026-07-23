@@ -50,6 +50,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
@@ -100,11 +101,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="About.aspx" />
+    <Content Include="Account\EditProfile.aspx" />
     <Content Include="Admin\AdminDashboard.aspx" />
     <Content Include="App_Data\userDatabase.mdf" />
     <Content Include="App_Data\userDatabase_log.ldf">
       <DependentUpon>userDatabase.mdf</DependentUpon>
     </Content>
+    <Content Include="assets\css\account.css" />
     <Content Include="assets\css\bootstrap.min.css" />
     <Content Include="assets\css\custom.css" />
     <Content Include="assets\css\flex-slider.css" />
@@ -158,14 +161,17 @@
     <Content Include="Content\Site.css" />
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
+    <Content Include="ForgotPassword.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Guest\GuestQuestion.aspx" />
+    <Content Include="Hani Mascot\Generated image 1.png" />
     <Content Include="Home.aspx" />
     <Content Include="index.html" />
     <Content Include="Instructor\InstructorDashboard.aspx" />
     <Content Include="Instructor\ManageAnnouncements.aspx" />
-    <Content Include="Instructor\ManageLesson.aspx" />
+    <Content Include="Instructor\ManageLessons.aspx" />
     <Content Include="Instructor\ManageQuizzes.aspx" />
+    <Content Include="Instructor\ManageQuestions.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="Register.aspx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -210,6 +216,7 @@
     <Content Include="assets\fonts\FontAwesome.otf" />
     <Content Include="prepros-6.config" />
     <Content Include="DBconnection.aspx" />
+    <Content Include="Account\Account.Master" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
@@ -247,6 +254,20 @@
     <Content Include="Site.Mobile.Master" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Account\Account.Master.cs">
+      <DependentUpon>Account.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\Account.Master.designer.cs">
+      <DependentUpon>Account.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Account\EditProfile.aspx.cs">
+      <DependentUpon>EditProfile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\EditProfile.aspx.designer.cs">
+      <DependentUpon>EditProfile.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin\AdminDashboard.aspx.cs">
       <DependentUpon>AdminDashboard.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -277,6 +298,13 @@
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ForgotPassword.aspx.cs">
+      <DependentUpon>ForgotPassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ForgotPassword.aspx.designer.cs">
+      <DependentUpon>ForgotPassword.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -294,6 +322,7 @@
     <Compile Include="Home.aspx.designer.cs">
       <DependentUpon>Home.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Instructor\AiQuestionHelper.cs" />
     <Compile Include="Instructor\InstructorDashboard.aspx.cs">
       <DependentUpon>InstructorDashboard.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -308,12 +337,12 @@
     <Compile Include="Instructor\ManageAnnouncements.aspx.designer.cs">
       <DependentUpon>ManageAnnouncements.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Instructor\ManageLesson.aspx.cs">
-      <DependentUpon>ManageLesson.aspx</DependentUpon>
+    <Compile Include="Instructor\ManageLessons.aspx.cs">
+      <DependentUpon>ManageLessons.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Instructor\ManageLesson.aspx.designer.cs">
-      <DependentUpon>ManageLesson.aspx</DependentUpon>
+    <Compile Include="Instructor\ManageLessons.aspx.designer.cs">
+      <DependentUpon>ManageLessons.aspx</DependentUpon>
     </Compile>
     <Compile Include="Instructor\ManageQuizzes.aspx.cs">
       <DependentUpon>ManageQuizzes.aspx</DependentUpon>
@@ -321,6 +350,13 @@
     </Compile>
     <Compile Include="Instructor\ManageQuizzes.aspx.designer.cs">
       <DependentUpon>ManageQuizzes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Instructor\ManageQuestions.aspx.cs">
+      <DependentUpon>ManageQuestions.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Instructor\ManageQuestions.aspx.designer.cs">
+      <DependentUpon>ManageQuestions.aspx</DependentUpon>
     </Compile>
     <Compile Include="Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>

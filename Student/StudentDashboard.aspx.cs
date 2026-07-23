@@ -26,5 +26,10 @@ namespace HangeulHubWAPP.Student
 
             Response.Redirect("../Home.aspx");
         }
+
+        protected void btnEditProfile_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/Account/EditProfile.aspx");
+        }
     }
 }

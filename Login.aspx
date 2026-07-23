@@ -88,8 +88,18 @@
                 OnClick="btnLogin_Click">
             </asp:Button>
 
-            <div class="bottom-links">
-                <a href="#">Forgot Password?</a>
+            <div class="text-center mt-4">
+
+            <asp:HyperLink
+                ID="lnkForgotPassword"
+                runat="server"
+                NavigateUrl="~/ForgotPassword.aspx"
+                CssClass="forgot-link">
+
+                Forgot Password?
+
+            </asp:HyperLink>
+
                 <br /><br />
                 Don't have an account?
                 <a href="Register.aspx">

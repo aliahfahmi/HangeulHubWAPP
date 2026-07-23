@@ -224,3 +224,59 @@ body {
     .toggle-password:hover {
         color: #8261EE;
     }
+
+.forgot-link {
+    color: #7B5CF5;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+    .forgot-link:hover {
+        text-decoration: underline;
+    }
+
+.password-wrapper {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.password-box {
+    padding-right: 45px;
+}
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #999;
+    font-size: 18px;
+    z-index: 10;
+}
+
+    .toggle-password:hover {
+        color: #7B5CF5;
+    }
+.password-icon {
+    cursor: pointer;
+    background: #fff;
+    border-left: none;
+}
+
+    .password-icon i {
+        color: #999;
+        transition: .3s;
+    }
+
+    .password-icon:hover i {
+        color: #7B5CF5;
+    }
+
+.input-group .form-control {
+    border-right: none;
+}
+
+    .input-group .form-control:focus {
+        box-shadow: none;
+    }
