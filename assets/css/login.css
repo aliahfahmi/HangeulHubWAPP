@@ -6,7 +6,7 @@
 }
 
 body {
-    font-family: 'Poppins',sans-serif;
+    font-family: 'Poppins', sans-serif;
     background: #f5f5ff;
 }
 
@@ -19,7 +19,7 @@ body {
 .left-panel {
     width: 50%;
     background: linear-gradient(135deg,#8261ee,#a759d1);
-    color: white;
+    color: #fff;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -43,16 +43,16 @@ body {
 
 .left-panel p {
     width: 80%;
-    text-align: center;
     margin-top: 20px;
+    text-align: center;
     line-height: 1.8;
     font-size: 17px;
     opacity: .95;
 }
 
 .features {
-    margin-top: 45px;
     width: 80%;
+    margin-top: 45px;
 }
 
     .features div {
@@ -62,15 +62,15 @@ body {
 
 .right-panel {
     width: 50%;
+    background: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: white;
 }
 
 .login-card {
     width: 430px;
-    background: white;
+    background: #fff;
     padding: 50px;
     border-radius: 25px;
     box-shadow: 0 15px 40px rgba(0,0,0,.08);
@@ -93,10 +93,11 @@ body {
     border: 1px solid #E3E3E3;
     border-radius: 14px;
     padding: 0 18px;
+    margin-bottom: 20px;
     font-size: 15px;
+    background: #fff;
     outline: none;
     transition: .3s;
-    background: #fff;
 }
 
     .login-input:hover {
@@ -110,6 +111,34 @@ body {
 
     .login-input::placeholder {
         color: #B8B8B8;
+    }
+
+.password-box {
+    position: relative;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+    .password-box .login-input {
+        width: 100%;
+        margin-bottom: 0;
+        padding-right: 55px;
+    }
+
+.toggle-password {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #999;
+    font-size: 18px;
+    transition: .3s;
+    z-index: 5;
+}
+
+    .toggle-password:hover {
+        color: #8261EE;
     }
 
 .remember {
@@ -140,13 +169,15 @@ body {
     line-height: 2;
 }
 
-    .bottom-links a {
+    .bottom-links a,
+    .forgot-link {
         color: #8261ee;
         text-decoration: none;
         font-weight: 600;
     }
 
-        .bottom-links a:hover {
+        .bottom-links a:hover,
+        .forgot-link:hover {
             text-decoration: underline;
         }
 
@@ -156,127 +187,59 @@ body {
     margin-bottom: 15px;
 }
 
-@media(max-width:900px) {
+@media (max-width:900px) {
 
     .login-container {
         flex-direction: column;
     }
 
-    .left-panel {
+    .left-panel,
+    .right-panel {
         width: 100%;
+    }
+
+    .left-panel {
         padding: 50px 30px;
     }
 
     .right-panel {
-        width: 100%;
         padding: 50px 20px;
     }
 
     .login-card {
         width: 100%;
+        max-width: 450px;
     }
-}
 
-.password-box {
-    position: relative;
-    width: 100%;
-    margin-bottom: 20px;
-}
+    .logo {
+        width: 180px;
+    }
 
-    .password-box .login-input {
+    .left-panel h1 {
+        font-size: 36px;
+    }
+
+    .left-panel p,
+    .features {
         width: 100%;
-        padding-right: 50px;
+    }
+}
+
+@media (max-width:576px) {
+
+    .login-card {
+        padding: 35px 25px;
     }
 
-.toggle-password {
-    position: absolute;
-    right: 18px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: #999;
-    font-size: 18px;
-    z-index: 999;
-}
+        .login-card h2 {
+            font-size: 30px;
+        }
 
-
-.password-box {
-    position: relative;
-    width: 100%;
-}
-
-    .password-box .login-input {
-        padding-right: 50px;
+    .login-input {
+        height: 52px;
     }
 
-.toggle-password {
-    position: absolute;
-    top: 50%;
-    right: 18px;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: #999;
-    font-size: 18px;
-    transition: .3s;
-    line-height: 1;
-}
-
-    .toggle-password:hover {
-        color: #8261EE;
+    .login-btn {
+        height: 52px;
     }
-
-.forgot-link {
-    color: #7B5CF5;
-    font-weight: 600;
-    text-decoration: none;
 }
-
-    .forgot-link:hover {
-        text-decoration: underline;
-    }
-
-.password-wrapper {
-    position: relative;
-    margin-bottom: 20px;
-}
-
-.password-box {
-    padding-right: 45px;
-}
-
-.toggle-password {
-    position: absolute;
-    top: 50%;
-    right: 15px;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: #999;
-    font-size: 18px;
-    z-index: 10;
-}
-
-    .toggle-password:hover {
-        color: #7B5CF5;
-    }
-.password-icon {
-    cursor: pointer;
-    background: #fff;
-    border-left: none;
-}
-
-    .password-icon i {
-        color: #999;
-        transition: .3s;
-    }
-
-    .password-icon:hover i {
-        color: #7B5CF5;
-    }
-
-.input-group .form-control {
-    border-right: none;
-}
-
-    .input-group .form-control:focus {
-        box-shadow: none;
-    }

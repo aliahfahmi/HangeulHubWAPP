@@ -11,9 +11,35 @@ namespace HangeulHubWAPP.Account
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["UserID"] == null)
+            if (!IsPostBack)
             {
-                Response.Redirect("~/Login.aspx");
+                if (Session["Role"] != null)
+                {
+                    string role = Session["Role"].ToString();
+
+                    switch (role)
+                    {
+                        case "Student":
+                            lnkDashboard.NavigateUrl = "../Student/StudentDashboard.aspx";
+                            break;
+
+                        case "Language Instructor":
+                            lnkDashboard.NavigateUrl = "../Instructor/InstructorDashboard.aspx";
+                            break;
+
+                        case "Admin":
+                            lnkDashboard.NavigateUrl = "../Admin/AdminDashboard.aspx";
+                            break;
+
+                        default:
+                            lnkDashboard.NavigateUrl = "../Home.aspx";
+                            break;
+                    }
+                }
+                else
+                {
+                    lnkDashboard.NavigateUrl = "../Home.aspx";
+                }
             }
         }
 
@@ -21,8 +47,7 @@ namespace HangeulHubWAPP.Account
         {
             Session.Clear();
             Session.Abandon();
-
-            Response.Redirect("~/Login.aspx");
+            Response.Redirect("../Home.aspx");
         }
     }
 }

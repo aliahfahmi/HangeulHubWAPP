@@ -9,7 +9,7 @@
     <!-- Google Font (Poppins) - loaded directly, no custom.css used -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Font Awesome, for the small icons (book, pencil, trophy) -->
+    <!-- Font Awesome, for the small icons (book, pencil, trophy, forum) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 
     <style>
@@ -44,42 +44,53 @@
 
 
         /* ================================
-           TOP BAR (title + logout button)
+           TOP BAR (title + account + logout buttons)
            ================================ */
         .dashboard-topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 25px 50px;
-    background: white;
-}
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 50px;
+            background: white;
+        }
+
         .topbar-actions {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
 
         .dashboard-topbar h2 {
             color: #222222;                   /* <-- title text color */
             font-weight: 700;
         }
 
+        .account-btn {
+            color: #7c5cfc;                   /* <-- account settings link color */
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .account-btn:hover {
+            text-decoration: underline;
+        }
+
         .logout-btn {
-    background: #6C63FF;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 12px 24px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-}
+            background: #6C63FF;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
 
-.logout-btn:hover {
-    background: #574fd6;
-}
-
+        .logout-btn:hover {
+            background: #574fd6;
+        }
 
 
         /* ================================
@@ -119,7 +130,7 @@
 
 
         /* ================================
-           FUNCTION CARDS (Learning / Quiz / Leaderboard)
+           FUNCTION CARDS (Learning / Quiz / Leaderboard / Forum)
            ================================ */
         .card-row {
             display: flex;
@@ -169,16 +180,16 @@
             color: #666666;                   /* <-- card description color */
         }
 
-.dashboard-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-.header-actions{
-    display:flex;
-    gap:15px;
-}
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
 
 
     </style>
@@ -188,30 +199,30 @@
 
     <form id="form1" runat="server">
         <!-- TOP BAR -->
-<div class="dashboard-topbar">
+        <div class="dashboard-topbar">
 
-    <h2>Student Dashboard</h2>
+            <h2>Student Dashboard</h2>
 
-    <div class="topbar-actions">
+            <div class="topbar-actions">
 
-        <asp:HyperLink
-            ID="lnkAccount"
-            runat="server"
-            NavigateUrl="~/Account/EditProfile.aspx"
-            CssClass="account-btn">
-            ⚙ Account Settings
-        </asp:HyperLink>
+                <asp:HyperLink
+                    ID="lnkAccount"
+                    runat="server"
+                    NavigateUrl="~/Account/EditProfile.aspx"
+                    CssClass="account-btn">
+                    ⚙ Account Settings
+                </asp:HyperLink>
 
-        <asp:Button
-            ID="btnLogout"
-            runat="server"
-            Text="Log Out"
-            CssClass="logout-btn"
-            OnClick="btnLogout_Click" />
+                <asp:Button
+                    ID="btnLogout"
+                    runat="server"
+                    Text="Log Out"
+                    CssClass="logout-btn"
+                    OnClick="btnLogout_Click" />
 
-    </div>
+            </div>
 
-</div>
+        </div>
 
         <!-- MAIN CONTENT SECTION -->
         <section class="dashboard-wrapper">
@@ -242,6 +253,13 @@
                     <h4>Leaderboard</h4>
                     <p>See how you rank among learners.</p>
                 </a>
+
+                <a href="StudentForum.aspx" class="dash-card">
+                    <i class="fa fa-comments"></i>
+                    <h4>Student Forum</h4>
+                    <p>Discuss lessons and ask questions with fellow learners.</p>
+                </a>
+
             </div>
 
         </section>

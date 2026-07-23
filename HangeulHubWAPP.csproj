@@ -110,6 +110,7 @@
     </Content>
     <Content Include="assets\css\account.css" />
     <Content Include="assets\css\bootstrap.min.css" />
+    <Content Include="assets\css\courses.css" />
     <Content Include="assets\css\custom.css" />
     <Content Include="assets\css\flex-slider.css" />
     <Content Include="assets\css\font-awesome.css" />
@@ -119,6 +120,7 @@
     <Content Include="assets\fonts\flexslider-icon.svg" />
     <Content Include="assets\fonts\fontawesome-webfont.svg" />
     <Content Include="assets\fonts\slick.svg" />
+    <Content Include="assets\images\avatar.png" />
     <Content Include="assets\images\banner-bg.png" />
     <Content Include="assets\images\blog-item-01.png" />
     <Content Include="assets\images\blog-item-02.png" />
@@ -129,6 +131,7 @@
     <Content Include="assets\images\left-image.png" />
     <Content Include="assets\images\logo.png" />
     <Content Include="assets\images\LogoHangeulHub.png" />
+    <Content Include="assets\images\mascot.png" />
     <Content Include="assets\images\right-image.png" />
     <Content Include="assets\images\testimonial-icon.png" />
     <Content Include="assets\images\work-process-bg.png" />
@@ -160,6 +163,7 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\Site.css" />
+    <Content Include="Courses.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="ForgotPassword.aspx" />
@@ -249,6 +253,7 @@
     <Content Include="Student\Leaderboard.aspx" />
     <Content Include="Student\quiz.aspx" />
     <Content Include="Student\StudentDashboard.aspx" />
+    <Content Include="Student\studentForum.aspx" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config" />
     <Content Include="Bundle.config" />
@@ -298,6 +303,13 @@
     </Compile>
     <Compile Include="Contact.aspx.designer.cs">
       <DependentUpon>Contact.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Courses.aspx.cs">
+      <DependentUpon>Courses.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Courses.aspx.designer.cs">
+      <DependentUpon>Courses.aspx</DependentUpon>
     </Compile>
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
@@ -415,6 +427,13 @@
     </Compile>
     <Compile Include="Student\StudentDashboard.aspx.designer.cs">
       <DependentUpon>StudentDashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Student\studentForum.aspx.cs">
+      <DependentUpon>studentForum.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student\studentForum.aspx.designer.cs">
+      <DependentUpon>studentForum.aspx</DependentUpon>
     </Compile>
     <Compile Include="ViewSwitcher.ascx.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>
