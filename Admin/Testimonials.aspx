@@ -136,6 +136,33 @@
             background-color: #ffffff;
         }
 
+        .filter-row input[type="text"] {
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 14px;
+            padding: 9px 14px;
+            border-radius: 6px;
+            border: 1px solid #dddddd;
+            flex: 1 1 220px;
+        }
+
+        .pager-row td {
+            padding: 14px 18px;
+            background-color: #f9f9fd;
+        }
+
+        .pager-row a,
+        .pager-row span {
+            font-size: 13px;
+            font-weight: 600;
+            margin-right: 10px;
+            color: #7c5cfc;
+            text-decoration: none;
+        }
+
+        .pager-row span {
+            color: #222222;
+        }
+
         .status-message {
             width: 100%;
             max-width: 950px;
@@ -162,11 +189,15 @@
 
         .testimonials-table th {
             background-color: #7c5cfc;        /* <-- table header background color */
-            color: #ffffff;                   /* <-- table header text color */
             font-weight: 700;
             font-size: 14px;
             padding: 14px 18px;
             text-align: left;
+        }
+
+        .testimonials-table th a {
+            color: #ffffff;                   /* <-- sortable header link color */
+            text-decoration: none;
         }
 
         .testimonials-table td {
@@ -264,12 +295,16 @@
 
             <!-- Filter row -->
             <div class="filter-row">
+                <asp:TextBox ID="txtSearch" runat="server" placeholder="Search by student name or content..."></asp:TextBox>
+
                 <asp:DropDownList ID="ddlStatusFilter" runat="server" AutoPostBack="true" OnSelectedIndexChanged="Filter_Changed">
                     <asp:ListItem Text="All Status" Value="" />
                     <asp:ListItem Text="Pending" Value="PENDING" />
                     <asp:ListItem Text="Approved" Value="APPROVED" />
                     <asp:ListItem Text="Rejected" Value="REJECTED" />
                 </asp:DropDownList>
+
+                <asp:LinkButton ID="btnSearch" runat="server" CssClass="back-btn" OnClick="btnSearch_Click">Search</asp:LinkButton>
             </div>
 
             <!-- Only shows on error/success feedback -->
@@ -282,17 +317,22 @@
                 AutoGenerateColumns="false"
                 GridLines="None"
                 DataKeyNames="TestimonialID"
-                OnRowCommand="GridViewTestimonials_RowCommand">
+                AllowSorting="true"
+                AllowPaging="true"
+                PageSize="8"
+                OnRowCommand="GridViewTestimonials_RowCommand"
+                OnSorting="GridViewTestimonials_Sorting"
+                OnPageIndexChanging="GridViewTestimonials_PageIndexChanging">
                 <Columns>
                     <asp:BoundField DataField="TestimonialID" HeaderText="ID" />
-                    <asp:BoundField DataField="StudentName" HeaderText="Student" />
+                    <asp:BoundField DataField="StudentName" HeaderText="Student" SortExpression="StudentName" />
 
                     <asp:TemplateField HeaderText="Content">
                         <ItemStyle CssClass="content-cell" />
                         <ItemTemplate><%# Eval("Content") %></ItemTemplate>
                     </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Status">
+                    <asp:TemplateField HeaderText="Status" SortExpression="Status">
                         <ItemTemplate>
                             <span class='status-pill <%# Eval("Status").ToString().ToLower() %>'>
                                 <%# Eval("Status") %>
@@ -325,6 +365,8 @@
                 <EmptyDataTemplate>
                     <div class="empty-row">No testimonials found.</div>
                 </EmptyDataTemplate>
+
+                <PagerStyle CssClass="pager-row" />
             </asp:GridView>
 
         </section>

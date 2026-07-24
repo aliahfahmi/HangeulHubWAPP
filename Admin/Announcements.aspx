@@ -172,11 +172,53 @@
 
         .announcements-table th {
             background-color: #7c5cfc;        /* <-- table header background color */
-            color: #ffffff;                   /* <-- table header text color */
             font-weight: 700;
             font-size: 14px;
             padding: 14px 18px;
             text-align: left;
+        }
+
+        .announcements-table th a {
+            color: #ffffff;                   /* <-- sortable header link color */
+            text-decoration: none;
+        }
+
+        .filter-row {
+            width: 100%;
+            max-width: 950px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .filter-row input[type="text"] {
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 14px;
+            padding: 9px 14px;
+            border-radius: 6px;
+            border: 1px solid #dddddd;
+            flex: 1 1 220px;
+        }
+
+        .pager-row td {
+            padding: 14px 18px;
+            background-color: #f9f9fd;
+        }
+
+        .pager-row a,
+        .pager-row span {
+            font-size: 13px;
+            font-weight: 600;
+            margin-right: 10px;
+            color: #7c5cfc;
+            text-decoration: none;
+        }
+
+        .pager-row span {
+            color: #222222;
         }
 
         .announcements-table td {
@@ -262,6 +304,12 @@
                 </div>
             </div>
 
+            <!-- Search row -->
+            <div class="filter-row">
+                <asp:TextBox ID="txtSearch" runat="server" placeholder="Search by title or content..."></asp:TextBox>
+                <asp:LinkButton ID="btnSearch" runat="server" CssClass="back-btn" OnClick="btnSearch_Click">Search</asp:LinkButton>
+            </div>
+
             <!-- Only shows on error/success feedback -->
             <asp:Label ID="lblMessage" runat="server" CssClass="status-message"></asp:Label>
 
@@ -272,15 +320,20 @@
                 AutoGenerateColumns="false"
                 GridLines="None"
                 DataKeyNames="AnnouncementID"
+                AllowSorting="true"
+                AllowPaging="true"
+                PageSize="8"
                 OnRowEditing="GridViewAnnouncements_RowEditing"
                 OnRowUpdating="GridViewAnnouncements_RowUpdating"
                 OnRowCancelingEdit="GridViewAnnouncements_RowCancelingEdit"
                 OnRowDeleting="GridViewAnnouncements_RowDeleting"
-                OnRowDataBound="GridViewAnnouncements_RowDataBound">
+                OnRowDataBound="GridViewAnnouncements_RowDataBound"
+                OnSorting="GridViewAnnouncements_Sorting"
+                OnPageIndexChanging="GridViewAnnouncements_PageIndexChanging">
                 <Columns>
                     <asp:BoundField DataField="AnnouncementID" HeaderText="ID" ReadOnly="true" />
-                    <asp:BoundField DataField="AuthorName" HeaderText="Posted By" ReadOnly="true" />
-                    <asp:BoundField DataField="Title" HeaderText="Title" />
+                    <asp:BoundField DataField="AuthorName" HeaderText="Posted By" ReadOnly="true" SortExpression="AuthorName" />
+                    <asp:BoundField DataField="Title" HeaderText="Title" SortExpression="Title" />
 
                     <asp:TemplateField HeaderText="Content">
                         <ItemStyle CssClass="content-cell" />
@@ -290,7 +343,7 @@
                         </EditItemTemplate>
                     </asp:TemplateField>
 
-                    <asp:BoundField DataField="DatePosted" HeaderText="Posted On" DataFormatString="{0:dd/MM/yyyy}" ReadOnly="true" />
+                    <asp:BoundField DataField="DatePosted" HeaderText="Posted On" DataFormatString="{0:dd/MM/yyyy}" ReadOnly="true" SortExpression="DatePosted" />
 
                     <asp:TemplateField HeaderText="Actions">
                         <ItemTemplate>
@@ -316,6 +369,8 @@
                 <EmptyDataTemplate>
                     <div class="empty-row">No announcements posted yet.</div>
                 </EmptyDataTemplate>
+
+                <PagerStyle CssClass="pager-row" />
             </asp:GridView>
 
         </section>

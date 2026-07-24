@@ -160,6 +160,21 @@
 
 
         /* ================================
+           CHART
+           ================================ */
+        .chart-container {
+            width: 100%;
+            max-width: 1000px;
+            background-color: #ffffff;        /* <-- chart card background color */
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            padding: 20px;
+            margin-bottom: 34px;
+            height: 280px;
+        }
+
+
+        /* ================================
            REPORT TABLES (GridView)
            ================================ */
         .report-table {
@@ -282,11 +297,20 @@
                     <asp:BoundField DataField="Attempts" HeaderText="Attempts" />
                     <asp:BoundField DataField="AvgScore" HeaderText="Avg Score" DataFormatString="{0:0.0}" />
                     <asp:BoundField DataField="PassingScore" HeaderText="Passing Score" />
+                    <asp:BoundField DataField="PassRate" HeaderText="Pass Rate" DataFormatString="{0:0.0}%" />
                 </Columns>
                 <EmptyDataTemplate>
                     <div class="empty-row">No quizzes found.</div>
                 </EmptyDataTemplate>
             </asp:GridView>
+
+            <!-- Quiz attempts chart -->
+            <div class="section-heading">Quiz Attempts by Quiz</div>
+            <div class="chart-container">
+                <canvas id="quizAttemptsChart"></canvas>
+            </div>
+            <asp:HiddenField ID="hfChartLabels" runat="server" />
+            <asp:HiddenField ID="hfChartAttempts" runat="server" />
 
             <!-- Top students -->
             <div class="section-heading">Top Students (Leaderboard)</div>
@@ -307,5 +331,37 @@
         </section>
 
     </form>
+
+    <!-- Bar chart of quiz attempts, built from the data already loaded
+         into the Quiz Performance table above (see BuildChartData in
+         Reports.aspx.cs) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <script>
+window.onload = function() {
+    var labels = JSON.parse(document.getElementById('<%= hfChartLabels.ClientID %>').value || "[]");
+            var attempts = JSON.parse(document.getElementById('<%= hfChartAttempts.ClientID %>').value || "[]");
+
+            var ctx = document.getElementById('quizAttemptsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Attempts',
+                        data: attempts,
+                        backgroundColor: '#7c5cfc'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { precision: 0 } }
+                    }
+                }
+            });
+        };
+    </script>
 </body>
 </html>

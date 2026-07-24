@@ -11,6 +11,12 @@ namespace HangeulHubWAPP.Admin
     {
         private string connStr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
+        private string SortExpression
+        {
+            get { return ViewState["SortExpression"] as string ?? "c.courseID ASC"; }
+            set { ViewState["SortExpression"] = value; }
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["UserID"] == null)
@@ -35,15 +41,20 @@ namespace HangeulHubWAPP.Admin
         {
             try
             {
+                string search = txtSearch.Text.Trim();
+
                 using (SqlConnection conn = new SqlConnection(connStr))
                 {
                     string query = @"SELECT c.courseID AS CourseID, c.level AS Level, c.title AS Title,
                                             (SELECT COUNT(*) FROM lessonTable l WHERE l.courseID = c.courseID) AS LessonCount,
                                             (SELECT COUNT(*) FROM quizTable q WHERE q.courseID = c.courseID) AS QuizCount
                                      FROM courseTable c
-                                     ORDER BY c.courseID";
+                                     WHERE (@search = '' OR c.title LIKE '%' + @search + '%')
+                                     ORDER BY " + SortExpression;
 
                     SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@search", search);
+
                     SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                     DataTable dt = new DataTable();
                     adapter.Fill(dt);
@@ -58,6 +69,40 @@ namespace HangeulHubWAPP.Admin
                 lblMessage.ForeColor = System.Drawing.Color.Red;
                 System.Diagnostics.Debug.WriteLine("BindGrid error: " + ex.Message);
             }
+        }
+
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            GridViewCourses.PageIndex = 0;
+            GridViewCourses.EditIndex = -1;
+            BindGrid();
+        }
+
+        protected void GridViewCourses_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            GridViewCourses.EditIndex = -1;
+            GridViewCourses.PageIndex = e.NewPageIndex;
+            BindGrid();
+        }
+
+        protected void GridViewCourses_Sorting(object sender, GridViewSortEventArgs e)
+        {
+            string column;
+            switch (e.SortExpression)
+            {
+                case "Level": column = "c.level"; break;
+                case "Title": column = "c.title"; break;
+                case "LessonCount": column = "LessonCount"; break;
+                case "QuizCount": column = "QuizCount"; break;
+                default: column = "c.courseID"; break;
+            }
+
+            bool currentlyAsc = SortExpression == column + " ASC";
+            SortExpression = column + (currentlyAsc ? " DESC" : " ASC");
+
+            GridViewCourses.PageIndex = 0;
+            GridViewCourses.EditIndex = -1;
+            BindGrid();
         }
 
         protected void btnAddCourse_Click(object sender, EventArgs e)
@@ -140,6 +185,14 @@ namespace HangeulHubWAPP.Admin
 
                 DropDownList ddlLevel = (DropDownList)row.FindControl("ddlEditLevel");
                 TextBox txtTitle = (TextBox)row.Cells[2].Controls[0];
+                string title = txtTitle.Text.Trim();
+
+                if (string.IsNullOrEmpty(title))
+                {
+                    lblMessage.Text = "Title cannot be empty.";
+                    lblMessage.ForeColor = System.Drawing.Color.Red;
+                    return;
+                }
 
                 using (SqlConnection conn = new SqlConnection(connStr))
                 {
@@ -150,7 +203,7 @@ namespace HangeulHubWAPP.Admin
 
                     SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@level", ddlLevel.SelectedValue);
-                    cmd.Parameters.AddWithValue("@title", txtTitle.Text.Trim());
+                    cmd.Parameters.AddWithValue("@title", title);
                     cmd.Parameters.AddWithValue("@courseId", courseId);
                     cmd.ExecuteNonQuery();
                 }
@@ -189,7 +242,6 @@ namespace HangeulHubWAPP.Admin
             }
             catch (SqlException)
             {
-                // Almost always a foreign key violation - lessons/quizzes still reference this course
                 lblMessage.Text = "Cannot delete this course - it still has lessons or quizzes linked to it.";
                 lblMessage.ForeColor = System.Drawing.Color.Red;
             }
