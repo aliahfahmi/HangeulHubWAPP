@@ -133,6 +133,17 @@ namespace HangeulHubWAPP.Student
 
                         if (dt.Rows.Count > 0)
                         {
+                            // Convert both real newlines and literal "\n" text into <br/> tags
+                            // so line breaks always show correctly regardless of how they were typed in
+                            foreach (DataRow row in dt.Rows)
+                            {
+                                string text = row["questionText"].ToString();
+                                text = text.Replace("\r\n", "<br/>")
+                                            .Replace("\n", "<br/>")
+                                            .Replace("\\n", "<br/>");
+                                row["questionText"] = text;
+                            }
+
                             rptQuestions.DataSource = dt;
                             rptQuestions.DataBind();
                         }
@@ -206,16 +217,35 @@ namespace HangeulHubWAPP.Student
                         }
                     }
 
-                    int scorePercentage = totalQuestions > 0 ? (int)Math.Round((double)correctAnswersCount / totalQuestions * 100) : 0;
+                    // Raw accuracy - used for pass/fail decision, unaffected by time
+                    int accuracyPercentage = totalQuestions > 0 ? (int)Math.Round((double)correctAnswersCount / totalQuestions * 100) : 0;
                     int nextAttemptNumber = currentAttempts + 1;
 
                     int timeTakenInMinutes = 1;
                     int.TryParse(hfTimeTaken.Value, out timeTakenInMinutes);
                     if (timeTakenInMinutes < 1) timeTakenInMinutes = 1;
 
+                    int timeLimit;
+                    int.TryParse(lblTimeLimit.Text, out timeLimit);
+                    if (timeLimit <= 0) timeLimit = timeTakenInMinutes; // fallback so we never divide by zero
+
+                    // ============================================
+                    // TIME-WEIGHTED SCORE FORMULA
+                    // Faster completion (relative to time limit) earns a bonus, up to +50%
+                    // speedRatio: how much time was saved, from 0 (used it all) to 1 (instant)
+                    // ============================================
+                    double speedRatio = (double)(timeLimit - timeTakenInMinutes) / timeLimit;
+                    if (speedRatio < 0) speedRatio = 0;   // took longer than the limit - no penalty, just no bonus
+                    if (speedRatio > 1) speedRatio = 1;
+
+                    double speedBonus = speedRatio * 0.5;  // up to +50% bonus
+
+                    int finalScore = (int)Math.Round(accuracyPercentage * (1 + speedBonus));
+                    // ============================================
+
                     string newAttemptID = "ATT" + Guid.NewGuid().ToString("N").Substring(0, 6).ToUpper();
                     string insertAttempt = @"INSERT INTO quizAttemptTable (attemptID, studentID, quizID, attemptNumber, score, dateTaken, timeTaken)
-                                             VALUES (@attemptID, @studentID, @quizID, @attemptNumber, @score, GETDATE(), @timeTaken)";
+                                     VALUES (@attemptID, @studentID, @quizID, @attemptNumber, @score, GETDATE(), @timeTaken)";
 
                     using (SqlCommand cmdInsert = new SqlCommand(insertAttempt, conn))
                     {
@@ -223,7 +253,7 @@ namespace HangeulHubWAPP.Student
                         cmdInsert.Parameters.AddWithValue("@studentID", studentID);
                         cmdInsert.Parameters.AddWithValue("@quizID", quizID);
                         cmdInsert.Parameters.AddWithValue("@attemptNumber", nextAttemptNumber);
-                        cmdInsert.Parameters.AddWithValue("@score", scorePercentage);
+                        cmdInsert.Parameters.AddWithValue("@score", finalScore);
                         cmdInsert.Parameters.AddWithValue("@timeTaken", timeTakenInMinutes);
 
                         cmdInsert.ExecuteNonQuery();
@@ -237,9 +267,11 @@ namespace HangeulHubWAPP.Student
                     pnlQuiz.Visible = false;
                     pnlResult.Visible = true;
 
-                    lblScore.Text = $"{scorePercentage}% ({correctAnswersCount}/{totalQuestions})";
+                    // Show both the raw accuracy and the time-boosted score to the student
+                    lblScore.Text = $"{finalScore} pts ({accuracyPercentage}% correct, {correctAnswersCount}/{totalQuestions})";
 
-                    if (scorePercentage >= passingScore)
+                    // Pass/fail is decided by ACCURACY, not the time-boosted score
+                    if (accuracyPercentage >= passingScore)
                     {
                         lblResultMessage.Text = $"Congratulations! You passed on Attempt #{nextAttemptNumber} in {timeTakenInMinutes} min!";
                     }

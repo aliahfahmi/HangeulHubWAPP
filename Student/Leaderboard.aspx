@@ -53,6 +53,17 @@
         .welcome-text h1 span { color: #7c5cfc; }
         .welcome-text p { margin-top: 8px; font-size: 15px; color: #666666; }
 
+        .level-badge {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 14px;
+            border-radius: 20px;
+            background-color: #ece8ff;
+            color: #7c5cfc;
+            margin-bottom: 15px;
+        }
+
         .filter-bar {
             width: 100%;
             max-width: 700px;
@@ -119,12 +130,13 @@
                 <p>See how you rank among students at the same level.</p>
             </div>
 
-            <div class="filter-bar">
-                <label>Level:</label>
-                <asp:DropDownList ID="ddlLevelFilter" runat="server" CssClass="filter-dropdown" AutoPostBack="true" OnSelectedIndexChanged="ddlLevelFilter_SelectedIndexChanged">
-                    <asp:ListItem Text="Beginner" Value="Beginner" />
-                    <asp:ListItem Text="Intermediate" Value="Intermediate" />
-                    <asp:ListItem Text="Advanced" Value="Advanced" />
+            <!-- Shown only when the student has ONE level - no selection needed -->
+            <asp:Label ID="lblLevel" runat="server" CssClass="level-badge" Visible="false"></asp:Label>
+
+            <!-- Shown only when the student has MORE THAN ONE level -->
+            <div class="filter-bar" id="divLevelSelect" runat="server" visible="false">
+                <label>Select Level:</label>
+                <asp:DropDownList ID="ddlLevelSelect" runat="server" CssClass="filter-dropdown" AutoPostBack="true" OnSelectedIndexChanged="ddlLevelSelect_SelectedIndexChanged">
                 </asp:DropDownList>
             </div>
 
@@ -132,7 +144,8 @@
                 CssClass="leaderboard-table"
                 AutoGenerateColumns="false"
                 GridLines="None"
-                OnSelectedIndexChanged="GridViewLeaderboard_SelectedIndexChanged">
+                OnSelectedIndexChanged="GridViewLeaderboard_SelectedIndexChanged"
+                EmptyDataText="No leaderboard data yet for this level.">
                 <Columns>
                     <asp:BoundField DataField="rank" HeaderText="Rank" />
                     <asp:BoundField DataField="name" HeaderText="Student" />

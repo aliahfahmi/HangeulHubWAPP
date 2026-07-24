@@ -258,10 +258,12 @@
     <Content Include="Scripts\WebForms\WebUIValidation.js" />
     <Content Include="Site.Master" />
     <Content Include="Student\Leaderboard.aspx" />
+    <Content Include="Student\learningModules.aspx" />
     <Content Include="Student\quiz.aspx" />
     <Content Include="Student\StudentDashboard.aspx" />
     <Content Include="Student\studentForum.aspx" />
     <Content Include="Student\studentQuizDashboard.aspx" />
+    <Content Include="Student\testimonialStudent.aspx" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config" />
     <Content Include="Bundle.config" />
@@ -450,6 +452,13 @@
     <Compile Include="Student\Leaderboard.aspx.designer.cs">
       <DependentUpon>Leaderboard.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Student\learningModules.aspx.cs">
+      <DependentUpon>learningModules.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student\learningModules.aspx.designer.cs">
+      <DependentUpon>learningModules.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Student\quiz.aspx.cs">
       <DependentUpon>quiz.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -477,6 +486,13 @@
     </Compile>
     <Compile Include="Student\studentQuizDashboard.aspx.designer.cs">
       <DependentUpon>studentQuizDashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Student\testimonialStudent.aspx.cs">
+      <DependentUpon>testimonialStudent.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student\testimonialStudent.aspx.designer.cs">
+      <DependentUpon>testimonialStudent.aspx</DependentUpon>
     </Compile>
     <Compile Include="ViewSwitcher.ascx.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>

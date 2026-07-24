@@ -236,7 +236,7 @@
             <!-- Function cards (can be scrolled left/right) -->
             <div class="card-row">
 
-                <a href="LearningModules.aspx" class="dash-card">
+                <a href="learningModules.aspx" class="dash-card">
                     <i class="fa fa-book"></i>
                     <h4>Learning Modules</h4>
                     <p>Continue lessons from Beginner to Advanced.</p>
@@ -258,6 +258,12 @@
                     <i class="fa fa-comments"></i>
                     <h4>Student Forum</h4>
                     <p>Discuss lessons and ask questions with fellow learners.</p>
+                </a>
+
+                <a href="testimonialStudent.aspx" class="dash-card">
+                    <i class="fa fa-quote-right"></i>
+                    <h4>Share Testimonial</h4>
+                    <p>Tell us about your learning experience with HangeulHub.</p>
                 </a>
 
             </div>
