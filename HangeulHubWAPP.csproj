@@ -105,6 +105,8 @@
     <Content Include="Admin\AdminDashboard.aspx" />
     <Content Include="Admin\ManageUsers.aspx" />
     <Content Include="Admin\ManageCourses.aspx" />
+    <Content Include="Admin\Testimonials.aspx" />
+    <Content Include="Admin\Announcements.aspx" />
     <Content Include="App_Data\userDatabase.mdf" />
     <Content Include="App_Data\userDatabase_log.ldf">
       <DependentUpon>userDatabase.mdf</DependentUpon>
@@ -165,6 +167,7 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\Site.css" />
+    <Content Include="Content\confirmModal.css" />
     <Content Include="Courses.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="FAQ.aspx" />
@@ -226,6 +229,7 @@
     <Content Include="DBconnection.aspx" />
     <Content Include="Account\Account.Master" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
+    <Content Include="Scripts\confirmModal.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
     <Content Include="Scripts\jquery-3.7.0.slim.js" />
@@ -298,6 +302,20 @@
     </Compile>
     <Compile Include="Admin\ManageCourses.aspx.designer.cs">
       <DependentUpon>ManageCourses.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Testimonials.aspx.cs">
+      <DependentUpon>Testimonials.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Testimonials.aspx.designer.cs">
+      <DependentUpon>Testimonials.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Announcements.aspx.cs">
+      <DependentUpon>Announcements.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Announcements.aspx.designer.cs">
+      <DependentUpon>Announcements.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="About.aspx.cs">

@@ -22,6 +22,11 @@ namespace HangeulHubWAPP.Admin
                 Response.Redirect("~/Login.aspx");
                 return;
             }
+
+            if (!IsPostBack)
+            {
+                name.Text = Session["Name"].ToString();
+            }
         }
         protected void btnLogout_Click(object sender, EventArgs e)
         {
