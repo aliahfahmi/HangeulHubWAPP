@@ -171,11 +171,52 @@
 
         .courses-table th {
             background-color: #7c5cfc;        /* <-- table header background color */
-            color: #ffffff;                   /* <-- table header text color */
             font-weight: 700;
             font-size: 14px;
             padding: 14px 18px;
             text-align: left;
+        }
+
+        .courses-table th a {
+            color: #ffffff;                   /* <-- sortable header link color */
+            text-decoration: none;
+        }
+
+        .filter-row {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .filter-row input[type="text"] {
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 14px;
+            padding: 9px 14px;
+            border-radius: 6px;
+            border: 1px solid #dddddd;
+        }
+
+        .pager-row td {
+            padding: 14px 18px;
+            background-color: #f9f9fd;
+        }
+
+        .pager-row a,
+        .pager-row span {
+            font-size: 13px;
+            font-weight: 600;
+            margin-right: 10px;
+            color: #7c5cfc;
+            text-decoration: none;
+        }
+
+        .pager-row span {
+            color: #222222;
         }
 
         .courses-table td {
@@ -251,6 +292,12 @@
                     OnClientClick="return confirmAction('Add this new course?', this);">Add Course</asp:LinkButton>
             </div>
 
+            <!-- Search row -->
+            <div class="filter-row">
+                <asp:TextBox ID="txtSearch" runat="server" placeholder="Search by course title..."></asp:TextBox>
+                <asp:LinkButton ID="btnSearch" runat="server" CssClass="back-btn" OnClick="btnSearch_Click">Search</asp:LinkButton>
+            </div>
+
             <!-- Only shows on error/success feedback -->
             <asp:Label ID="lblMessage" runat="server" CssClass="status-message"></asp:Label>
 
@@ -261,15 +308,20 @@
                 AutoGenerateColumns="false"
                 GridLines="None"
                 DataKeyNames="CourseID"
+                AllowSorting="true"
+                AllowPaging="true"
+                PageSize="8"
                 OnRowEditing="GridViewCourses_RowEditing"
                 OnRowUpdating="GridViewCourses_RowUpdating"
                 OnRowCancelingEdit="GridViewCourses_RowCancelingEdit"
                 OnRowDeleting="GridViewCourses_RowDeleting"
-                OnRowDataBound="GridViewCourses_RowDataBound">
+                OnRowDataBound="GridViewCourses_RowDataBound"
+                OnSorting="GridViewCourses_Sorting"
+                OnPageIndexChanging="GridViewCourses_PageIndexChanging">
                 <Columns>
                     <asp:BoundField DataField="CourseID" HeaderText="Course ID" ReadOnly="true" />
 
-                    <asp:TemplateField HeaderText="Level">
+                    <asp:TemplateField HeaderText="Level" SortExpression="Level">
                         <ItemTemplate><%# Eval("Level") %></ItemTemplate>
                         <EditItemTemplate>
                             <asp:DropDownList ID="ddlEditLevel" runat="server">
@@ -280,9 +332,9 @@
                         </EditItemTemplate>
                     </asp:TemplateField>
 
-                    <asp:BoundField DataField="Title" HeaderText="Title" />
-                    <asp:BoundField DataField="LessonCount" HeaderText="Lessons" ReadOnly="true" />
-                    <asp:BoundField DataField="QuizCount" HeaderText="Quizzes" ReadOnly="true" />
+                    <asp:BoundField DataField="Title" HeaderText="Title" SortExpression="Title" />
+                    <asp:BoundField DataField="LessonCount" HeaderText="Lessons" ReadOnly="true" SortExpression="LessonCount" />
+                    <asp:BoundField DataField="QuizCount" HeaderText="Quizzes" ReadOnly="true" SortExpression="QuizCount" />
 
                     <asp:TemplateField HeaderText="Actions">
                         <ItemTemplate>
@@ -308,6 +360,8 @@
                 <EmptyDataTemplate>
                     <div class="empty-row">No courses found.</div>
                 </EmptyDataTemplate>
+
+                <PagerStyle CssClass="pager-row" />
             </asp:GridView>
 
         </section>

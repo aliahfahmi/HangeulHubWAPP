@@ -11,6 +11,14 @@ namespace HangeulHubWAPP.Admin
     {
         private string connStr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
+        // Empty means "use the default pending-first order"; once the admin
+        // clicks a column header, that takes over instead.
+        private string SortExpression
+        {
+            get { return ViewState["SortExpression"] as string ?? ""; }
+            set { ViewState["SortExpression"] = value; }
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["UserID"] == null)
@@ -35,7 +43,12 @@ namespace HangeulHubWAPP.Admin
         {
             try
             {
+                string search = txtSearch.Text.Trim();
                 string status = ddlStatusFilter.SelectedValue;
+
+                string orderBy = string.IsNullOrEmpty(SortExpression)
+                    ? @"CASE t.appstat WHEN 'PENDING' THEN 0 WHEN 'APPROVED' THEN 1 ELSE 2 END, t.testimonialID"
+                    : SortExpression;
 
                 using (SqlConnection conn = new SqlConnection(connStr))
                 {
@@ -46,16 +59,12 @@ namespace HangeulHubWAPP.Admin
                                       FROM testimonialTable t
                                       JOIN userTable u ON t.studentID = u.UserID
                                       WHERE (@status = '' OR t.appstat = @status)
-                                      ORDER BY
-                                          CASE t.appstat
-                                              WHEN 'PENDING' THEN 0
-                                              WHEN 'APPROVED' THEN 1
-                                              ELSE 2
-                                          END,
-                                          t.testimonialID";
+                                        AND (@search = '' OR u.name LIKE '%' + @search + '%' OR t.content LIKE '%' + @search + '%')
+                                      ORDER BY " + orderBy;
 
                     SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@status", status);
+                    cmd.Parameters.AddWithValue("@search", search);
 
                     SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                     DataTable dt = new DataTable();
@@ -73,8 +82,38 @@ namespace HangeulHubWAPP.Admin
             }
         }
 
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            GridViewTestimonials.PageIndex = 0;
+            BindGrid();
+        }
+
         protected void Filter_Changed(object sender, EventArgs e)
         {
+            GridViewTestimonials.PageIndex = 0;
+            BindGrid();
+        }
+
+        protected void GridViewTestimonials_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            GridViewTestimonials.PageIndex = e.NewPageIndex;
+            BindGrid();
+        }
+
+        protected void GridViewTestimonials_Sorting(object sender, GridViewSortEventArgs e)
+        {
+            string column;
+            switch (e.SortExpression)
+            {
+                case "StudentName": column = "u.name"; break;
+                case "Status": column = "t.appstat"; break;
+                default: column = "t.testimonialID"; break;
+            }
+
+            bool currentlyAsc = SortExpression == column + " ASC";
+            SortExpression = column + (currentlyAsc ? " DESC" : " ASC");
+
+            GridViewTestimonials.PageIndex = 0;
             BindGrid();
         }
 

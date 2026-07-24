@@ -113,6 +113,37 @@
 
 
         /* ================================
+           ADD NEW USER FORM
+           ================================ */
+        .add-row {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 22px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 18px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .add-row input[type="text"],
+        .add-row input[type="password"],
+        .add-row select {
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 14px;
+            padding: 9px 14px;
+            border-radius: 6px;
+            border: 1px solid #dddddd;
+            color: #222222;
+            background-color: #ffffff;
+        }
+
+
+        /* ================================
            FILTER ROW (search + role/status dropdowns)
            ================================ */
         .filter-row {
@@ -143,7 +174,6 @@
             text-align: center;
             font-size: 14px;
             font-weight: 600;
-            color: #e05555;
             margin-bottom: 14px;
         }
 
@@ -164,11 +194,15 @@
 
         .users-table th {
             background-color: #7c5cfc;        /* <-- table header background color */
-            color: #ffffff;                   /* <-- table header text color */
             font-weight: 700;
             font-size: 14px;
             padding: 14px 18px;
             text-align: left;
+        }
+
+        .users-table th a {
+            color: #ffffff;                   /* <-- sortable header link color */
+            text-decoration: none;
         }
 
         .users-table td {
@@ -195,11 +229,41 @@
             border: 1px solid #dddddd;
         }
 
+        .action-link {
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            margin-right: 12px;
+            color: #7c5cfc;                   /* <-- action link color */
+        }
+
+        .action-link:hover {
+            text-decoration: underline;
+        }
+
         .empty-row {
             text-align: center;
             padding: 30px 18px;
             color: #999999;
             font-size: 14px;
+        }
+
+        .pager-row td {
+            padding: 14px 18px;
+            background-color: #f9f9fd;
+        }
+
+        .pager-row a,
+        .pager-row span {
+            font-size: 13px;
+            font-weight: 600;
+            margin-right: 10px;
+            color: #7c5cfc;
+            text-decoration: none;
+        }
+
+        .pager-row span {
+            color: #222222;
         }
 
     </style>
@@ -222,6 +286,20 @@
                 <p>View, search, edit, or deactivate student, instructor, and admin accounts.</p>
             </div>
 
+            <!-- Add new user form -->
+            <div class="add-row">
+                <asp:TextBox ID="txtNewName" runat="server" placeholder="Full name"></asp:TextBox>
+                <asp:TextBox ID="txtNewEmail" runat="server" placeholder="Email address"></asp:TextBox>
+                <asp:TextBox ID="txtNewPassword" runat="server" TextMode="Password" placeholder="Password"></asp:TextBox>
+                <asp:DropDownList ID="ddlNewRole" runat="server">
+                    <asp:ListItem Text="Student" Value="Student" />
+                    <asp:ListItem Text="Language Instructor" Value="Language Instructor" />
+                    <asp:ListItem Text="Admin" Value="Admin" />
+                </asp:DropDownList>
+                <asp:LinkButton ID="btnAddUser" runat="server" CssClass="back-btn" OnClick="btnAddUser_Click"
+                    OnClientClick="return confirmAction('Add this new user?', this);">Add User</asp:LinkButton>
+            </div>
+
             <!-- Filter row -->
             <div class="filter-row">
                 <asp:TextBox ID="txtSearch" runat="server" placeholder="Search by name or email..."></asp:TextBox>
@@ -242,7 +320,7 @@
                 <asp:LinkButton ID="btnSearch" runat="server" CssClass="back-btn" OnClick="btnSearch_Click">Search</asp:LinkButton>
             </div>
 
-            <!-- Only shows if something goes wrong loading/saving data -->
+            <!-- Only shows on error/success feedback -->
             <asp:Label ID="lblMessage" runat="server" CssClass="status-message"></asp:Label>
 
             <!-- GridView - bound manually in code-behind (BindGrid), same
@@ -252,16 +330,21 @@
                 AutoGenerateColumns="false"
                 GridLines="None"
                 DataKeyNames="UserID"
+                AllowSorting="true"
+                AllowPaging="true"
+                PageSize="8"
                 OnRowEditing="GridViewUsers_RowEditing"
                 OnRowUpdating="GridViewUsers_RowUpdating"
                 OnRowCancelingEdit="GridViewUsers_RowCancelingEdit"
-                OnRowDataBound="GridViewUsers_RowDataBound">
+                OnRowDataBound="GridViewUsers_RowDataBound"
+                OnSorting="GridViewUsers_Sorting"
+                OnPageIndexChanging="GridViewUsers_PageIndexChanging">
                 <Columns>
                     <asp:BoundField DataField="UserID" HeaderText="User ID" ReadOnly="true" />
-                    <asp:BoundField DataField="Name" HeaderText="Name" />
-                    <asp:BoundField DataField="Email" HeaderText="Email" />
+                    <asp:BoundField DataField="Name" HeaderText="Name" SortExpression="Name" />
+                    <asp:BoundField DataField="Email" HeaderText="Email" SortExpression="Email" />
 
-                    <asp:TemplateField HeaderText="Role">
+                    <asp:TemplateField HeaderText="Role" SortExpression="Role">
                         <ItemTemplate><%# Eval("Role") %></ItemTemplate>
                         <EditItemTemplate>
                             <asp:DropDownList ID="ddlEditRole" runat="server">
@@ -272,7 +355,7 @@
                         </EditItemTemplate>
                     </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Status">
+                    <asp:TemplateField HeaderText="Status" SortExpression="Status">
                         <ItemTemplate><%# Eval("Status") %></ItemTemplate>
                         <EditItemTemplate>
                             <asp:DropDownList ID="ddlEditStatus" runat="server">
@@ -282,7 +365,7 @@
                         </EditItemTemplate>
                     </asp:TemplateField>
 
-                    <asp:BoundField DataField="RegisteredDate" HeaderText="Registered" DataFormatString="{0:dd/MM/yyyy}" ReadOnly="true" />
+                    <asp:BoundField DataField="RegisteredDate" HeaderText="Registered" DataFormatString="{0:dd/MM/yyyy}" ReadOnly="true" SortExpression="RegisteredDate" />
 
                     <asp:TemplateField HeaderText="Actions">
                         <ItemTemplate>
@@ -300,6 +383,8 @@
                 <EmptyDataTemplate>
                     <div class="empty-row">No users found matching your search.</div>
                 </EmptyDataTemplate>
+
+                <PagerStyle CssClass="pager-row" />
             </asp:GridView>
 
         </section>

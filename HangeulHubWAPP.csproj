@@ -107,6 +107,7 @@
     <Content Include="Admin\ManageCourses.aspx" />
     <Content Include="Admin\Testimonials.aspx" />
     <Content Include="Admin\Announcements.aspx" />
+    <Content Include="Admin\Reports.aspx" />
     <Content Include="App_Data\userDatabase.mdf" />
     <Content Include="App_Data\userDatabase_log.ldf">
       <DependentUpon>userDatabase.mdf</DependentUpon>
@@ -180,6 +181,7 @@
     <Content Include="index.html" />
     <Content Include="Instructor\InstructorDashboard.aspx" />
     <Content Include="Instructor\ManageAnnouncements.aspx" />
+    <Content Include="Instructor\ManageForum.aspx" />
     <Content Include="Instructor\ManageLessons.aspx" />
     <Content Include="Instructor\ManageQuizzes.aspx" />
     <Content Include="Instructor\ManageQuestions.aspx" />
@@ -319,6 +321,13 @@
     <Compile Include="Admin\Announcements.aspx.designer.cs">
       <DependentUpon>Announcements.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Admin\Reports.aspx.cs">
+      <DependentUpon>Reports.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Reports.aspx.designer.cs">
+      <DependentUpon>Reports.aspx</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="About.aspx.cs">
       <DependentUpon>About.aspx</DependentUpon>
@@ -394,6 +403,13 @@
     </Compile>
     <Compile Include="Instructor\ManageAnnouncements.aspx.designer.cs">
       <DependentUpon>ManageAnnouncements.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Instructor\ManageForum.aspx.cs">
+      <DependentUpon>ManageForum.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Instructor\ManageForum.aspx.designer.cs">
+      <DependentUpon>ManageForum.aspx</DependentUpon>
     </Compile>
     <Compile Include="Instructor\ManageLessons.aspx.cs">
       <DependentUpon>ManageLessons.aspx</DependentUpon>
