@@ -5,10 +5,6 @@ AutoEventWireup="true"
 CodeBehind="Home.aspx.cs"
 Inherits="HangeulHubWAPP.Home" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="assets/css/custom.css" rel="stylesheet" />
-</asp:Content>
-
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
 <section class="hero-section">
@@ -120,8 +116,7 @@ Inherits="HangeulHubWAPP.Home" %>
         </div>
 
     </div>
-</section>
-
+</section> 
 <section class="journey-section">
     <div class="container">
 
@@ -150,7 +145,72 @@ Inherits="HangeulHubWAPP.Home" %>
 
     </div>
 </section>
+    <section class="testimonial-section">
 
+    <div class="container">
+
+        <div class="section-title-custom">
+            <span class="testimonial-subtitle">
+                💜 Student Testimonials
+            </span>
+
+            <h2>Hear What Our Students Say</h2>
+
+            <p>
+                Thousands of learners have started their Korean journey with HangeulHub.
+                Here's what some of them have to say.
+            </p>
+        </div>
+
+
+<asp:Repeater ID="rptTestimonials" runat="server">
+
+    <ItemTemplate>
+
+        <div style="
+background:#ffffff;
+padding:40px;
+border-radius:20px;
+margin-bottom:20px;
+box-shadow:0 15px 35px rgba(124,92,252,.12);
+border:1px solid #ece5ff;
+">
+
+            <div class="quote-icon">
+                <i class="fa fa-quote-left"></i>
+            </div>
+
+            <div class="testimonial-stars">
+                ★★★★★
+            </div>
+
+            <p class="testimonial-text">
+                <%# Eval("content") %>
+            </p>
+
+<div class="testimonial-user">
+
+    <div class="testimonial-info">
+
+        <h4><%# Eval("studentName") %></h4>
+
+        <span>
+            <i class="fa fa-check-circle"></i>
+            Verified Student
+        </span>
+
+    </div>
+
+</div>
+
+        </div>
+
+    </ItemTemplate>
+
+</asp:Repeater>
+
+</div>
+</section>
 <section class="cta-section">
     <div class="container">
         <h2>Ready to Begin Your Korean Journey?</h2>

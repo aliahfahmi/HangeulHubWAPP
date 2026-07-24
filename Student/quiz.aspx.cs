@@ -30,7 +30,6 @@ namespace HangeulHubWAPP.Student
 
                     if (string.IsNullOrEmpty(quizID))
                     {
-                        // No quiz selected - send them back to pick one
                         Response.Redirect("StudentQuizDashboard.aspx");
                         return;
                     }
@@ -46,10 +45,9 @@ namespace HangeulHubWAPP.Student
 
                     if (attemptsUsed >= MAX_ATTEMPTS)
                     {
-                        // Show their best score instead of letting them retry
                         pnlQuiz.Visible = false;
                         int bestScore = GetBestScoreForQuiz(studentID, quizID);
-                        lblMessage.Text = $"You have used all {MAX_ATTEMPTS} attempts for this quiz. Your best score was {bestScore}%.";
+                        lblMessage.Text = $"You have used all {MAX_ATTEMPTS} attempts for this quiz. Your best score was {bestScore} pts.";
                         return;
                     }
 
@@ -133,6 +131,17 @@ namespace HangeulHubWAPP.Student
 
                         if (dt.Rows.Count > 0)
                         {
+                            // Convert both real newlines and literal "\n" text into <br/> tags
+                            // so line breaks always show correctly regardless of how they were typed in
+                            foreach (DataRow row in dt.Rows)
+                            {
+                                string text = row["questionText"].ToString();
+                                text = text.Replace("\r\n", "<br/>")
+                                            .Replace("\n", "<br/>")
+                                            .Replace("\\n", "<br/>");
+                                row["questionText"] = text;
+                            }
+
                             rptQuestions.DataSource = dt;
                             rptQuestions.DataBind();
                         }
@@ -196,6 +205,7 @@ namespace HangeulHubWAPP.Student
                                     if (res != null)
                                     {
                                         string correctAns = res.ToString().Trim();
+                                        // OrdinalIgnoreCase means answers are accepted regardless of upper/lowercase
                                         if (string.Equals(userAns, correctAns, StringComparison.OrdinalIgnoreCase))
                                         {
                                             correctAnswersCount++;
@@ -206,12 +216,31 @@ namespace HangeulHubWAPP.Student
                         }
                     }
 
-                    int scorePercentage = totalQuestions > 0 ? (int)Math.Round((double)correctAnswersCount / totalQuestions * 100) : 0;
+                    // Raw accuracy - used for pass/fail decision, unaffected by time
+                    int accuracyPercentage = totalQuestions > 0 ? (int)Math.Round((double)correctAnswersCount / totalQuestions * 100) : 0;
                     int nextAttemptNumber = currentAttempts + 1;
 
                     int timeTakenInMinutes = 1;
                     int.TryParse(hfTimeTaken.Value, out timeTakenInMinutes);
                     if (timeTakenInMinutes < 1) timeTakenInMinutes = 1;
+
+                    int timeLimit;
+                    int.TryParse(lblTimeLimit.Text, out timeLimit);
+                    if (timeLimit <= 0) timeLimit = timeTakenInMinutes; // fallback so we never divide by zero
+
+                    // ============================================
+                    // TIME-WEIGHTED SCORE FORMULA
+                    // Faster completion (relative to time limit) earns a bonus, up to +50%
+                    // speedRatio: how much time was saved, from 0 (used it all) to 1 (instant)
+                    // ============================================
+                    double speedRatio = (double)(timeLimit - timeTakenInMinutes) / timeLimit;
+                    if (speedRatio < 0) speedRatio = 0;   // took longer than the limit - no penalty, just no bonus
+                    if (speedRatio > 1) speedRatio = 1;
+
+                    double speedBonus = speedRatio * 0.5;  // up to +50% bonus
+
+                    int finalScore = (int)Math.Round(accuracyPercentage * (1 + speedBonus));
+                    // ============================================
 
                     string newAttemptID = "ATT" + Guid.NewGuid().ToString("N").Substring(0, 6).ToUpper();
                     string insertAttempt = @"INSERT INTO quizAttemptTable (attemptID, studentID, quizID, attemptNumber, score, dateTaken, timeTaken)
@@ -223,7 +252,7 @@ namespace HangeulHubWAPP.Student
                         cmdInsert.Parameters.AddWithValue("@studentID", studentID);
                         cmdInsert.Parameters.AddWithValue("@quizID", quizID);
                         cmdInsert.Parameters.AddWithValue("@attemptNumber", nextAttemptNumber);
-                        cmdInsert.Parameters.AddWithValue("@score", scorePercentage);
+                        cmdInsert.Parameters.AddWithValue("@score", finalScore);
                         cmdInsert.Parameters.AddWithValue("@timeTaken", timeTakenInMinutes);
 
                         cmdInsert.ExecuteNonQuery();
@@ -237,9 +266,11 @@ namespace HangeulHubWAPP.Student
                     pnlQuiz.Visible = false;
                     pnlResult.Visible = true;
 
-                    lblScore.Text = $"{scorePercentage}% ({correctAnswersCount}/{totalQuestions})";
+                    // Show both the raw accuracy and the time-boosted score to the student
+                    lblScore.Text = $"{finalScore} pts ({accuracyPercentage}% correct, {correctAnswersCount}/{totalQuestions})";
 
-                    if (scorePercentage >= passingScore)
+                    // Pass/fail is decided by ACCURACY, not the time-boosted score
+                    if (accuracyPercentage >= passingScore)
                     {
                         lblResultMessage.Text = $"Congratulations! You passed on Attempt #{nextAttemptNumber} in {timeTakenInMinutes} min!";
                     }
@@ -253,7 +284,7 @@ namespace HangeulHubWAPP.Student
                     }
                 }
 
-                // Recalculate this student's overall leaderboard total + everyone's rank
+                // Update this student's overall leaderboard record (combined across all levels)
                 UpdateLeaderboardTotal(studentID);
             }
             catch (Exception ex)
@@ -262,8 +293,9 @@ namespace HangeulHubWAPP.Student
             }
         }
 
-        // Sums the student's BEST score from every quiz they've attempted,
-        // then saves it as their leaderboard totalScore.
+        // Sums the student's BEST score from every quiz they've attempted (all levels combined)
+        // NOTE: this is kept as a general record only. The actual level-specific leaderboard
+        // shown to students is calculated live in Leaderboard.aspx.cs, not from this table.
         private void UpdateLeaderboardTotal(string studentID)
         {
             int newTotalScore;
@@ -322,7 +354,7 @@ namespace HangeulHubWAPP.Student
             RecalculateRanks();
         }
 
-        // Re-ranks EVERY student in leaderboardTable, highest totalScore = rank 1
+        // Re-ranks EVERY student in leaderboardTable overall (all levels combined) - kept for record purposes only
         private void RecalculateRanks()
         {
             using (SqlConnection conn = new SqlConnection(connStr))
