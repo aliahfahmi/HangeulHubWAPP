@@ -106,6 +106,7 @@
     <Content Include="Admin\ManageUsers.aspx" />
     <Content Include="Admin\ManageCourses.aspx" />
     <Content Include="Admin\Testimonials.aspx" />
+    <Content Include="Admin\Announcements.aspx" />
     <Content Include="App_Data\userDatabase.mdf" />
     <Content Include="App_Data\userDatabase_log.ldf">
       <DependentUpon>userDatabase.mdf</DependentUpon>
@@ -308,6 +309,13 @@
     </Compile>
     <Compile Include="Admin\Testimonials.aspx.designer.cs">
       <DependentUpon>Testimonials.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Announcements.aspx.cs">
+      <DependentUpon>Announcements.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Announcements.aspx.designer.cs">
+      <DependentUpon>Announcements.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="About.aspx.cs">

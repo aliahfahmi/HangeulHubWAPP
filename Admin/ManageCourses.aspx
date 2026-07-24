@@ -247,7 +247,8 @@
 
                 <asp:TextBox ID="txtNewTitle" runat="server" placeholder="Course title (e.g. Beginner Korean)"></asp:TextBox>
 
-                <asp:LinkButton ID="btnAddCourse" runat="server" CssClass="back-btn" OnClick="btnAddCourse_Click">Add Course</asp:LinkButton>
+                <asp:LinkButton ID="btnAddCourse" runat="server" CssClass="back-btn" OnClick="btnAddCourse_Click"
+                    OnClientClick="return confirmAction('Add this new course?', this);">Add Course</asp:LinkButton>
             </div>
 
             <!-- Only shows on error/success feedback -->
