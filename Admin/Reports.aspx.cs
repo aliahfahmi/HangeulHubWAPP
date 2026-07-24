@@ -29,6 +29,10 @@ namespace HangeulHubWAPP.Admin
                 LoadStats();
                 LoadQuizPerformance();
                 LoadTopStudents();
+                LoadInstructorActivity();
+                LoadUserGrowth();
+                LoadForumEngagement();
+                LoadTestimonialBreakdown();
             }
         }
 
@@ -96,34 +100,38 @@ namespace HangeulHubWAPP.Admin
                 GridViewQuizPerformance.DataSource = dt;
                 GridViewQuizPerformance.DataBind();
 
-                BuildChartData(dt);
+                string labelsJson, valuesJson;
+                BuildJsonArrays(dt, "Title", "Attempts", out labelsJson, out valuesJson);
+                hfChartLabels.Value = labelsJson;
+                hfChartAttempts.Value = valuesJson;
             }
         }
 
-        // Builds a small hand-rolled JSON payload (no external JSON library
-        // referenced in this project) for the quiz attempts bar chart.
-        private void BuildChartData(DataTable dt)
+        // Hand-rolled JSON array builder (no external JSON library referenced
+        // in this project) - turns a DataTable column into a JS array string.
+        // Used for every chart on this page.
+        private void BuildJsonArrays(DataTable dt, string labelColumn, string valueColumn, out string labelsJson, out string valuesJson)
         {
             var labels = new System.Text.StringBuilder();
-            var attempts = new System.Text.StringBuilder();
+            var values = new System.Text.StringBuilder();
 
             for (int i = 0; i < dt.Rows.Count; i++)
             {
-                string title = dt.Rows[i]["Title"].ToString().Replace("\"", "\\\"");
-                string attemptCount = dt.Rows[i]["Attempts"].ToString();
+                string label = dt.Rows[i][labelColumn].ToString().Replace("\"", "\\\"");
+                string value = dt.Rows[i][valueColumn].ToString();
 
                 if (i > 0)
                 {
                     labels.Append(",");
-                    attempts.Append(",");
+                    values.Append(",");
                 }
 
-                labels.Append("\"").Append(title).Append("\"");
-                attempts.Append(attemptCount);
+                labels.Append("\"").Append(label).Append("\"");
+                values.Append(value);
             }
 
-            hfChartLabels.Value = "[" + labels.ToString() + "]";
-            hfChartAttempts.Value = "[" + attempts.ToString() + "]";
+            labelsJson = "[" + labels.ToString() + "]";
+            valuesJson = "[" + values.ToString() + "]";
         }
 
         private void LoadTopStudents()
@@ -142,6 +150,109 @@ namespace HangeulHubWAPP.Admin
 
                 GridViewTopStudents.DataSource = dt;
                 GridViewTopStudents.DataBind();
+            }
+        }
+
+        // Shows how much content each instructor (and any admin who has
+        // posted announcements) has actually contributed to the platform.
+        private void LoadInstructorActivity()
+        {
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                string query = @"SELECT u.name AS AuthorName, u.role AS Role,
+                                         ISNULL(l.LessonCount, 0) AS LessonsPosted,
+                                         ISNULL(q.QuizCount, 0) AS QuizzesPosted,
+                                         ISNULL(a.AnnCount, 0) AS AnnouncementsPosted
+                                  FROM userTable u
+                                  LEFT JOIN (SELECT instructorID, COUNT(*) AS LessonCount FROM lessonTable GROUP BY instructorID) l
+                                         ON l.instructorID = u.UserID
+                                  LEFT JOIN (SELECT instructorID, COUNT(*) AS QuizCount FROM quizTable GROUP BY instructorID) q
+                                         ON q.instructorID = u.UserID
+                                  LEFT JOIN (SELECT instructorID, COUNT(*) AS AnnCount FROM announcementTable GROUP BY instructorID) a
+                                         ON a.instructorID = u.UserID
+                                  WHERE u.role = 'Language Instructor' OR ISNULL(a.AnnCount, 0) > 0
+                                  ORDER BY (ISNULL(l.LessonCount, 0) + ISNULL(q.QuizCount, 0) + ISNULL(a.AnnCount, 0)) DESC";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                GridViewInstructorActivity.DataSource = dt;
+                GridViewInstructorActivity.DataBind();
+            }
+        }
+
+        // Line chart data: how many users registered per month.
+        private void LoadUserGrowth()
+        {
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                string query = @"SELECT FORMAT(regdate, 'yyyy-MM') AS RegMonth, COUNT(*) AS UserCount
+                                  FROM userTable
+                                  GROUP BY FORMAT(regdate, 'yyyy-MM')
+                                  ORDER BY RegMonth";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                string labelsJson, valuesJson;
+                BuildJsonArrays(dt, "RegMonth", "UserCount", out labelsJson, out valuesJson);
+                hfGrowthLabels.Value = labelsJson;
+                hfGrowthCounts.Value = valuesJson;
+            }
+        }
+
+        // Total forum questions, how many are answered vs still pending,
+        // and the average time (in hours) it takes to get a response.
+        private void LoadForumEngagement()
+        {
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                string query = @"SELECT
+                    COUNT(*) AS TotalQuestions,
+                    SUM(CASE WHEN responseText IS NOT NULL THEN 1 ELSE 0 END) AS AnsweredCount,
+                    SUM(CASE WHEN responseText IS NULL THEN 1 ELSE 0 END) AS PendingCount,
+                    (SELECT ISNULL(AVG(CAST(DATEDIFF(HOUR, questionDate, responseDate) AS FLOAT)), 0)
+                     FROM forumTable WHERE responseDate IS NOT NULL) AS AvgResponseHours
+                    FROM forumTable";
+
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(query, conn);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        litForumTotal.Text = reader["TotalQuestions"].ToString();
+                        litForumAnswered.Text = reader["AnsweredCount"] == DBNull.Value ? "0" : reader["AnsweredCount"].ToString();
+                        litForumPending.Text = reader["PendingCount"] == DBNull.Value ? "0" : reader["PendingCount"].ToString();
+                        litForumAvgResponse.Text = Convert.ToDouble(reader["AvgResponseHours"]).ToString("0.0") + "h";
+                    }
+                }
+            }
+        }
+
+        // Doughnut chart data: how many testimonials are Pending/Approved/Rejected.
+        private void LoadTestimonialBreakdown()
+        {
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                string query = @"SELECT appstat AS Status, COUNT(*) AS Cnt
+                                  FROM testimonialTable
+                                  GROUP BY appstat";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                string labelsJson, valuesJson;
+                BuildJsonArrays(dt, "Status", "Cnt", out labelsJson, out valuesJson);
+                hfTestimonialLabels.Value = labelsJson;
+                hfTestimonialCounts.Value = valuesJson;
             }
         }
 

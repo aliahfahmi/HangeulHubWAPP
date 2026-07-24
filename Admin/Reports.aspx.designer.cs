@@ -123,6 +123,24 @@ namespace HangeulHubWAPP.Admin
         protected global::System.Web.UI.WebControls.Literal litPendingForum;
 
         /// <summary>
+        /// hfGrowthLabels control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hfGrowthLabels;
+
+        /// <summary>
+        /// hfGrowthCounts control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hfGrowthCounts;
+
+        /// <summary>
         /// GridViewQuizPerformance control.
         /// </summary>
         /// <remarks>
@@ -150,6 +168,60 @@ namespace HangeulHubWAPP.Admin
         protected global::System.Web.UI.WebControls.HiddenField hfChartAttempts;
 
         /// <summary>
+        /// litForumTotal control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litForumTotal;
+
+        /// <summary>
+        /// litForumAnswered control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litForumAnswered;
+
+        /// <summary>
+        /// litForumPending control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litForumPending;
+
+        /// <summary>
+        /// litForumAvgResponse control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litForumAvgResponse;
+
+        /// <summary>
+        /// hfTestimonialLabels control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hfTestimonialLabels;
+
+        /// <summary>
+        /// hfTestimonialCounts control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hfTestimonialCounts;
+
+        /// <summary>
         /// GridViewTopStudents control.
         /// </summary>
         /// <remarks>
@@ -157,5 +229,14 @@ namespace HangeulHubWAPP.Admin
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView GridViewTopStudents;
+
+        /// <summary>
+        /// GridViewInstructorActivity control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView GridViewInstructorActivity;
     }
 }

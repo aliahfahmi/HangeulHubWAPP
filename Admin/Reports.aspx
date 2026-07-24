@@ -284,6 +284,14 @@
                 </div>
             </div>
 
+            <!-- User growth over time -->
+            <div class="section-heading">User Growth (Registrations by Month)</div>
+            <div class="chart-container">
+                <canvas id="userGrowthChart"></canvas>
+            </div>
+            <asp:HiddenField ID="hfGrowthLabels" runat="server" />
+            <asp:HiddenField ID="hfGrowthCounts" runat="server" />
+
             <!-- Quiz performance -->
             <div class="section-heading">Quiz Performance</div>
             <asp:GridView ID="GridViewQuizPerformance" runat="server"
@@ -312,6 +320,35 @@
             <asp:HiddenField ID="hfChartLabels" runat="server" />
             <asp:HiddenField ID="hfChartAttempts" runat="server" />
 
+            <!-- Forum engagement -->
+            <div class="section-heading">Forum Engagement</div>
+            <div class="stat-row" style="margin-bottom:34px;">
+                <div class="stat-card">
+                    <div class="stat-number"><asp:Literal ID="litForumTotal" runat="server" /></div>
+                    <div class="stat-label">Total Questions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number"><asp:Literal ID="litForumAnswered" runat="server" /></div>
+                    <div class="stat-label">Answered</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number"><asp:Literal ID="litForumPending" runat="server" /></div>
+                    <div class="stat-label">Pending</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number"><asp:Literal ID="litForumAvgResponse" runat="server" /></div>
+                    <div class="stat-label">Avg Response Time</div>
+                </div>
+            </div>
+
+            <!-- Testimonial approval breakdown -->
+            <div class="section-heading">Testimonial Approval Breakdown</div>
+            <div class="chart-container" style="max-width:400px;">
+                <canvas id="testimonialChart"></canvas>
+            </div>
+            <asp:HiddenField ID="hfTestimonialLabels" runat="server" />
+            <asp:HiddenField ID="hfTestimonialCounts" runat="server" />
+
             <!-- Top students -->
             <div class="section-heading">Top Students (Leaderboard)</div>
             <asp:GridView ID="GridViewTopStudents" runat="server"
@@ -328,6 +365,24 @@
                 </EmptyDataTemplate>
             </asp:GridView>
 
+            <!-- Instructor activity -->
+            <div class="section-heading">Instructor Activity</div>
+            <asp:GridView ID="GridViewInstructorActivity" runat="server"
+                CssClass="report-table"
+                AutoGenerateColumns="false"
+                GridLines="None">
+                <Columns>
+                    <asp:BoundField DataField="AuthorName" HeaderText="Name" />
+                    <asp:BoundField DataField="Role" HeaderText="Role" />
+                    <asp:BoundField DataField="LessonsPosted" HeaderText="Lessons Posted" />
+                    <asp:BoundField DataField="QuizzesPosted" HeaderText="Quizzes Posted" />
+                    <asp:BoundField DataField="AnnouncementsPosted" HeaderText="Announcements Posted" />
+                </Columns>
+                <EmptyDataTemplate>
+                    <div class="empty-row">No instructor activity found.</div>
+                </EmptyDataTemplate>
+            </asp:GridView>
+
         </section>
 
     </form>
@@ -337,19 +392,47 @@
          Reports.aspx.cs) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
     <script>
-window.onload = function() {
-    var labels = JSON.parse(document.getElementById('<%= hfChartLabels.ClientID %>').value || "[]");
-            var attempts = JSON.parse(document.getElementById('<%= hfChartAttempts.ClientID %>').value || "[]");
+        window.onload = function () {
+            var labels = JSON.parse(document.getElementById('<%= hfChartLabels.ClientID %>').value || "[]");
+    var attempts = JSON.parse(document.getElementById('<%= hfChartAttempts.ClientID %>').value || "[]");
 
-            var ctx = document.getElementById('quizAttemptsChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
+    var ctx = document.getElementById('quizAttemptsChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Attempts',
+                data: attempts,
+                backgroundColor: '#7c5cfc'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, ticks: { precision: 0 } }
+            }
+        }
+    });
+
+    // User growth line chart
+    var growthLabels = JSON.parse(document.getElementById('<%= hfGrowthLabels.ClientID %>').value || "[]");
+            var growthCounts = JSON.parse(document.getElementById('<%= hfGrowthCounts.ClientID %>').value || "[]");
+
+            var growthCtx = document.getElementById('userGrowthChart').getContext('2d');
+            new Chart(growthCtx, {
+                type: 'line',
                 data: {
-                    labels: labels,
+                    labels: growthLabels,
                     datasets: [{
-                        label: 'Attempts',
-                        data: attempts,
-                        backgroundColor: '#7c5cfc'
+                        label: 'New Users',
+                        data: growthCounts,
+                        borderColor: '#7c5cfc',
+                        backgroundColor: 'rgba(124, 92, 252, 0.15)',
+                        fill: true,
+                        tension: 0.25
                     }]
                 },
                 options: {
@@ -359,6 +442,32 @@ window.onload = function() {
                     scales: {
                         y: { beginAtZero: true, ticks: { precision: 0 } }
                     }
+                }
+            });
+
+            // Testimonial approval breakdown doughnut chart
+            var testimonialLabels = JSON.parse(document.getElementById('<%= hfTestimonialLabels.ClientID %>').value || "[]");
+            var testimonialCounts = JSON.parse(document.getElementById('<%= hfTestimonialCounts.ClientID %>').value || "[]");
+
+            var testimonialColorMap = { PENDING: '#cc8b00', APPROVED: '#2ecc71', REJECTED: '#e05555' };
+            var testimonialColors = testimonialLabels.map(function (l) {
+                return testimonialColorMap[l] || '#7c5cfc';
+            });
+
+            var testimonialCtx = document.getElementById('testimonialChart').getContext('2d');
+            new Chart(testimonialCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: testimonialLabels,
+                    datasets: [{
+                        data: testimonialCounts,
+                        backgroundColor: testimonialColors
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } }
                 }
             });
         };
