@@ -34,7 +34,6 @@ namespace HangeulHubWAPP.Student
                 {
                     // Only one level - show it directly, no dropdown needed
                     divLevelSelect.Visible = false;
-
                     lblLevel.Text = levels[0];
                     lblLevel.Visible = true;
 
@@ -84,21 +83,27 @@ namespace HangeulHubWAPP.Student
             return levels;
         }
 
-        // Loads ranked students who are enrolled in courses at this ONE selected level
+        // Computes total score AND rank live, scoped to ONE level, purely via JOIN across
+        // quizAttemptTable -> quizTable -> userTable. Does not read from leaderboardTable at all,
+        // so a student's score in one level can never leak into another level's ranking.
         private void LoadLeaderboard(string level)
         {
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string query = @"SELECT l.rank, u.name, l.totalScore
-                                  FROM leaderboardTable l
-                                  JOIN userTable u ON l.studentID = u.UserID
-                                  WHERE l.studentID IN (
-                                      SELECT DISTINCT p.studentID
-                                      FROM progressTable p
-                                      JOIN courseTable c ON p.courseID = c.courseID
-                                      WHERE c.level = @level
-                                  )
-                                  ORDER BY l.rank ASC";
+                string query = @"SELECT 
+                                      RANK() OVER (ORDER BY SUM(BestScores.bestScore) DESC) AS rank,
+                                      u.name,
+                                      SUM(BestScores.bestScore) AS totalScore
+                                  FROM userTable u
+                                  JOIN (
+                                      SELECT qa.studentID, qa.quizID, MAX(qa.score) AS bestScore
+                                      FROM quizAttemptTable qa
+                                      JOIN quizTable q ON qa.quizID = q.quizID
+                                      WHERE q.diffLevel = @level
+                                      GROUP BY qa.studentID, qa.quizID
+                                  ) AS BestScores ON u.UserID = BestScores.studentID
+                                  GROUP BY u.UserID, u.name
+                                  ORDER BY totalScore DESC";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@level", level);

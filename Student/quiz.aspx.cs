@@ -30,7 +30,6 @@ namespace HangeulHubWAPP.Student
 
                     if (string.IsNullOrEmpty(quizID))
                     {
-                        // No quiz selected - send them back to pick one
                         Response.Redirect("StudentQuizDashboard.aspx");
                         return;
                     }
@@ -46,10 +45,9 @@ namespace HangeulHubWAPP.Student
 
                     if (attemptsUsed >= MAX_ATTEMPTS)
                     {
-                        // Show their best score instead of letting them retry
                         pnlQuiz.Visible = false;
                         int bestScore = GetBestScoreForQuiz(studentID, quizID);
-                        lblMessage.Text = $"You have used all {MAX_ATTEMPTS} attempts for this quiz. Your best score was {bestScore}%.";
+                        lblMessage.Text = $"You have used all {MAX_ATTEMPTS} attempts for this quiz. Your best score was {bestScore} pts.";
                         return;
                     }
 
@@ -207,6 +205,7 @@ namespace HangeulHubWAPP.Student
                                     if (res != null)
                                     {
                                         string correctAns = res.ToString().Trim();
+                                        // OrdinalIgnoreCase means answers are accepted regardless of upper/lowercase
                                         if (string.Equals(userAns, correctAns, StringComparison.OrdinalIgnoreCase))
                                         {
                                             correctAnswersCount++;
@@ -245,7 +244,7 @@ namespace HangeulHubWAPP.Student
 
                     string newAttemptID = "ATT" + Guid.NewGuid().ToString("N").Substring(0, 6).ToUpper();
                     string insertAttempt = @"INSERT INTO quizAttemptTable (attemptID, studentID, quizID, attemptNumber, score, dateTaken, timeTaken)
-                                     VALUES (@attemptID, @studentID, @quizID, @attemptNumber, @score, GETDATE(), @timeTaken)";
+                                             VALUES (@attemptID, @studentID, @quizID, @attemptNumber, @score, GETDATE(), @timeTaken)";
 
                     using (SqlCommand cmdInsert = new SqlCommand(insertAttempt, conn))
                     {
@@ -285,7 +284,7 @@ namespace HangeulHubWAPP.Student
                     }
                 }
 
-                // Recalculate this student's overall leaderboard total + everyone's rank
+                // Update this student's overall leaderboard record (combined across all levels)
                 UpdateLeaderboardTotal(studentID);
             }
             catch (Exception ex)
@@ -294,8 +293,9 @@ namespace HangeulHubWAPP.Student
             }
         }
 
-        // Sums the student's BEST score from every quiz they've attempted,
-        // then saves it as their leaderboard totalScore.
+        // Sums the student's BEST score from every quiz they've attempted (all levels combined)
+        // NOTE: this is kept as a general record only. The actual level-specific leaderboard
+        // shown to students is calculated live in Leaderboard.aspx.cs, not from this table.
         private void UpdateLeaderboardTotal(string studentID)
         {
             int newTotalScore;
@@ -354,7 +354,7 @@ namespace HangeulHubWAPP.Student
             RecalculateRanks();
         }
 
-        // Re-ranks EVERY student in leaderboardTable, highest totalScore = rank 1
+        // Re-ranks EVERY student in leaderboardTable overall (all levels combined) - kept for record purposes only
         private void RecalculateRanks()
         {
             using (SqlConnection conn = new SqlConnection(connStr))

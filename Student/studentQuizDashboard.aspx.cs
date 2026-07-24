@@ -153,5 +153,10 @@ namespace HangeulHubWAPP.Student
         {
             Response.Redirect("StudentDashboard.aspx");
         }
+
+        protected void rptQuizzes_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+
+        }
     }
 }

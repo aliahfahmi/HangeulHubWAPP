@@ -150,7 +150,7 @@
             </div>
 
             <div class="quiz-list">
-                <asp:Repeater ID="rptQuizzes" runat="server" OnItemDataBound="rptQuizzes_ItemDataBound">
+                <asp:Repeater ID="rptQuizzes" runat="server" OnItemDataBound="rptQuizzes_ItemDataBound" OnItemCommand="rptQuizzes_ItemCommand">
                     <ItemTemplate>
                         <div class="quiz-card">
                             <div class="quiz-card-info">
