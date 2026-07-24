@@ -12,6 +12,9 @@
     <!-- Font Awesome, for the small icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 
+    <!-- Shared confirmation modal styling (used across Admin pages) -->
+    <link href="../Content/confirmModal.css" rel="stylesheet" />
+
     <style>
 
         /* ================================
@@ -280,13 +283,23 @@
                     <asp:BoundField DataField="LessonCount" HeaderText="Lessons" ReadOnly="true" />
                     <asp:BoundField DataField="QuizCount" HeaderText="Quizzes" ReadOnly="true" />
 
-                    <asp:CommandField ShowEditButton="true" ShowCancelButton="true" />
+                    <asp:TemplateField HeaderText="Actions">
+                        <ItemTemplate>
+                            <asp:LinkButton runat="server" CssClass="action-link" CommandName="Edit">Edit</asp:LinkButton>
+                        </ItemTemplate>
+                        <EditItemTemplate>
+                            <asp:LinkButton runat="server" CssClass="action-link"
+                                CommandName="Update"
+                                OnClientClick="return confirmAction('Save changes to this course?', this);">Update</asp:LinkButton>
+                            <asp:LinkButton runat="server" CssClass="action-link" CommandName="Cancel">Cancel</asp:LinkButton>
+                        </EditItemTemplate>
+                    </asp:TemplateField>
 
                     <asp:TemplateField HeaderText="">
                         <ItemTemplate>
                             <asp:LinkButton ID="btnDelete" runat="server" CssClass="action-link"
                                 CommandName="Delete"
-                                OnClientClick="return confirm('Delete this course? This only works if no lessons or quizzes are linked to it.');">Delete</asp:LinkButton>
+                                OnClientClick="return confirmAction('Delete this course? This only works if no lessons or quizzes are linked to it.', this);">Delete</asp:LinkButton>
                         </ItemTemplate>
                     </asp:TemplateField>
                 </Columns>
@@ -299,5 +312,9 @@
         </section>
 
     </form>
+
+    <!-- Shared confirmation modal logic (used across Admin pages) -->
+    <script src="../Scripts/jquery-3.7.0.min.js"></script>
+    <script src="../Scripts/confirmModal.js"></script>
 </body>
 </html>

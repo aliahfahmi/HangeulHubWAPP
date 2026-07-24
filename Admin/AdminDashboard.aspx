@@ -163,11 +163,18 @@
             color: #666666;                   /* <-- card description color */
         }
 
-        .topbar-actions{
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .account-btn {
+            color: #7c5cfc;                   /* <-- account settings link color */
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+        }
 
     </style>
 </head>
@@ -179,18 +186,19 @@
         <!-- TOP BAR -->
         <div class="dashboard-topbar">
             <h2>Admin Dashboard</h2>
-                <div class="topbar-actions">
+            <div class="topbar-actions">
 
-        <asp:HyperLink
-            ID="lnkAccount"
-            runat="server"
-            NavigateUrl="~/Account/EditProfile.aspx"
-            CssClass="account-btn">
-            ⚙ Account Settings
-        </asp:HyperLink>
-                </div>
+                <asp:HyperLink
+                    ID="lnkAccount"
+                    runat="server"
+                    NavigateUrl="~/Account/EditProfile.aspx"
+                    CssClass="account-btn">
+                    ⚙ Account Settings
+                </asp:HyperLink>
 
-            <asp:LinkButton ID="btnLogout" runat="server" OnClick="btnLogout_Click" CssClass="logout-btn">Log Out</asp:LinkButton>
+                <asp:LinkButton ID="btnLogout" runat="server" OnClick="btnLogout_Click" CssClass="logout-btn">Log Out</asp:LinkButton>
+
+            </div>
         </div>
 
         <!-- MAIN CONTENT SECTION -->
