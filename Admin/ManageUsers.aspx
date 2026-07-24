@@ -12,20 +12,20 @@
     <!-- Font Awesome, for the small icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 
+    <!-- Shared confirmation modal styling (used across Admin pages) -->
+    <link href="../Content/confirmModal.css" rel="stylesheet" />
+
     <style>
 
-
         /* ================================
-           COLOUR SETTINGS (same palette as AdminDashboard.aspx / StudentDashboard.aspx)
+           COLOUR SETTINGS (change here to re-theme the whole page)
            ================================ */
         /*
-            Background color   : #f4f4fc  (light lavender)
-            Purple accent color: #7c5cfc
+            Background color   : #f4f4fc  (light lavender, same tone as Home.aspx)
+            Purple accent color: #7c5cfc  (used for headings, icons, buttons)
             Dark text color    : #222222
             Grey text color    : #666666
             White (cards/topbar): #ffffff
-            Success/Active green: #2ecc71
-            Inactive grey       : #b0b0b0
         */
 
 
@@ -46,7 +46,7 @@
 
 
         /* ================================
-           TOP BAR (title + back + logout button)
+           TOP BAR (title + back button)
            ================================ */
         .dashboard-topbar {
             display: flex;
@@ -62,187 +62,154 @@
             font-weight: 700;
         }
 
-        .topbar-right {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .back-link {
-            font-size: 14px;
-            font-weight: 600;
-            color: #7c5cfc;                   /* <-- back link color */
-            text-decoration: none;
-        }
-
-        .back-link:hover {
-            text-decoration: underline;
-        }
-
-        .logout-btn {
+        .back-btn {
             padding: 10px 22px;
             border-radius: 6px;
             text-decoration: none;
             font-weight: 600;
             font-size: 14px;
+            border: none;
+            cursor: pointer;
 
-            background-color: #7c5cfc;        /* <-- logout button background color */
-            color: #ffffff;                   /* <-- logout button text color */
+            background-color: #7c5cfc;        /* <-- back button background color */
+            color: #ffffff;                   /* <-- back button text color */
         }
 
-        .logout-btn:hover {
-            background-color: #6a4ae0;        /* <-- logout button hover color */
+        .back-btn:hover {
+            background-color: #6a4ae0;        /* <-- back button hover color */
         }
 
 
         /* ================================
-           PAGE WRAPPER
+           WELCOME SECTION
            ================================ */
-        .content-wrapper {
+        .dashboard-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
 
-            padding: 30px 40px 50px 40px;
-            min-height: 100vh;
+            padding-top: 30px;
+            padding-bottom: 40px;
+            min-height: 150vh;   /* makes page tall enough to scroll down */
         }
 
-        .page-heading {
-            width: 100%;
-            max-width: 1100px;
-            margin-bottom: 20px;
+        .welcome-text {
+            text-align: center;
+            margin-bottom: 25px;
         }
 
-        .page-heading h1 {
-            font-size: 28px;
+        .welcome-text h1 {
+            font-size: 34px;
             font-weight: 800;
-            color: #222222;
+            color: #7c5cfc;                   /* <-- heading text color */
         }
 
-        .page-heading h1 span {
-            color: #7c5cfc;                   /* <-- accent purple word color */
-        }
-
-        .page-heading p {
-            margin-top: 6px;
-            font-size: 14px;
-            color: #666666;
+        .welcome-text p {
+            margin-top: 8px;
+            font-size: 15px;
+            color: #666666;                   /* <-- subtitle text color */
         }
 
 
         /* ================================
-           FILTER BAR
+           ADD NEW USER FORM
            ================================ */
-        .filter-bar {
+        .add-row {
             width: 100%;
-            max-width: 1100px;
+            max-width: 900px;
             display: flex;
             flex-wrap: wrap;
+            justify-content: center;
             align-items: center;
-            gap: 14px;
-
-            background-color: #ffffff;        /* <-- filter bar background color */
+            gap: 12px;
+            margin-bottom: 22px;
+            background-color: #ffffff;
             border-radius: 12px;
             padding: 18px 20px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            margin-bottom: 24px;
         }
 
-        .filter-bar input[type="text"],
-        .filter-bar select {
+        .add-row input[type="text"],
+        .add-row input[type="password"],
+        .add-row select {
             font-family: 'Poppins', Arial, sans-serif;
             font-size: 14px;
             padding: 9px 14px;
             border-radius: 6px;
-            border: 1px solid #dcdcec;
+            border: 1px solid #dddddd;
             color: #222222;
-            background-color: #f9f9fd;
-        }
-
-        .filter-bar input[type="text"] {
-            flex: 1 1 220px;
-        }
-
-        .filter-bar select {
-            flex: 0 0 auto;
-        }
-
-        .btn-primary {
-            padding: 10px 20px;
-            border-radius: 6px;
-            border: none;
-            font-family: 'Poppins', Arial, sans-serif;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-
-            background-color: #7c5cfc;        /* <-- primary button background color */
-            color: #ffffff;
-        }
-
-        .btn-primary:hover {
-            background-color: #6a4ae0;
-        }
-
-        .btn-add {
-            margin-left: auto;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 14px;
-
-            background-color: #222222;        /* <-- "Add New User" button background color */
-            color: #ffffff;
-        }
-
-        .btn-add:hover {
-            background-color: #3a3a3a;
+            background-color: #ffffff;
         }
 
 
         /* ================================
-           TABLE CARD
+           FILTER ROW (search + role/status dropdowns)
            ================================ */
-        .table-card {
+        .filter-row {
             width: 100%;
-            max-width: 1100px;
-
-            background-color: #ffffff;        /* <-- table card background color */
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            overflow: hidden;
+            max-width: 900px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 22px;
         }
 
+        .filter-row input[type="text"],
+        .filter-row select {
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 14px;
+            padding: 9px 14px;
+            border-radius: 6px;
+            border: 1px solid #dddddd;
+            color: #222222;
+            background-color: #ffffff;
+        }
+
+        .status-message {
+            width: 100%;
+            max-width: 900px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 14px;
+        }
+
+
+        /* ================================
+           USERS TABLE (GridView)
+           ================================ */
         .users-table {
             width: 100%;
+            max-width: 900px;
             border-collapse: collapse;
+
+            background-color: #ffffff;        /* <-- table background color */
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
         .users-table th {
-            text-align: left;
-            font-size: 13px;
+            background-color: #7c5cfc;        /* <-- table header background color */
             font-weight: 700;
-            color: #666666;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-
-            background-color: #f4f4fc;        /* <-- table header background color */
+            font-size: 14px;
             padding: 14px 18px;
-            border-bottom: 1px solid #eaeaf5;
+            text-align: left;
+        }
+
+        .users-table th a {
+            color: #ffffff;                   /* <-- sortable header link color */
+            text-decoration: none;
         }
 
         .users-table td {
-            font-size: 14px;
-            color: #222222;
             padding: 14px 18px;
-            border-bottom: 1px solid #f0f0f7;
-            vertical-align: middle;
+            font-size: 14px;
+            color: #222222;                   /* <-- table cell text color */
+            border-bottom: 1px solid #eeeeee;
         }
 
         .users-table tr:last-child td {
@@ -250,84 +217,37 @@
         }
 
         .users-table tr:hover td {
-            background-color: #faf9ff;
+            background-color: #f7f5ff;        /* <-- row hover color */
         }
 
-        .profile-cell {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .profile-cell img {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            object-fit: cover;
-            background-color: #eaeaf5;
-        }
-
-        .role-pill {
-            display: inline-block;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 4px 12px;
-            border-radius: 20px;
-            background-color: #efe9ff;
-            color: #7c5cfc;                   /* <-- role pill text color */
-        }
-
-        .status-pill {
-            display: inline-block;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 4px 12px;
-            border-radius: 20px;
-        }
-
-        .status-pill.active {
-            background-color: #e6f9ee;
-            color: #2ecc71;                   /* <-- active status color */
-        }
-
-        .status-pill.inactive {
-            background-color: #f1f1f1;
-            color: #999999;                   /* <-- inactive status color */
+        .users-table select,
+        .users-table input[type="text"] {
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 13px;
+            padding: 6px 8px;
+            border-radius: 4px;
+            border: 1px solid #dddddd;
         }
 
         .action-link {
             font-size: 13px;
             font-weight: 600;
             text-decoration: none;
-            margin-right: 14px;
+            margin-right: 12px;
+            color: #7c5cfc;                   /* <-- action link color */
         }
 
-        .action-link.edit {
-            color: #7c5cfc;                   /* <-- edit action color */
-        }
-
-        .action-link.edit:hover {
+        .action-link:hover {
             text-decoration: underline;
         }
 
-        .action-link.toggle {
-            color: #e05555;                   /* <-- deactivate/activate action color */
-        }
-
-        .action-link.toggle:hover {
-            text-decoration: underline;
-        }
-
-        .empty-row td {
+        .empty-row {
             text-align: center;
-            color: #999999;
             padding: 30px 18px;
+            color: #999999;
+            font-size: 14px;
         }
 
-
-        /* ================================
-           PAGER
-           ================================ */
         .pager-row td {
             padding: 14px 18px;
             background-color: #f9f9fd;
@@ -348,130 +268,131 @@
 
     </style>
 </head>
-
 <body>
-
     <form id="form1" runat="server">
 
         <!-- TOP BAR -->
         <div class="dashboard-topbar">
             <h2>Manage Users</h2>
-            <div class="topbar-right">
-                <a href="AdminDashboard.aspx" class="back-link"><i class="fa fa-arrow-left"></i> Back to Dashboard</a>
-                <asp:LinkButton ID="btnLogout" runat="server" OnClick="btnLogout_Click" CssClass="logout-btn">Log Out</asp:LinkButton>
-            </div>
+            <asp:LinkButton ID="btnBack" runat="server" OnClick="btnBack_Click" CssClass="back-btn">Back to Dashboard</asp:LinkButton>
         </div>
 
         <!-- MAIN CONTENT SECTION -->
-        <section class="content-wrapper">
+        <section class="dashboard-wrapper">
 
-            <div class="page-heading">
-                <h1>User <span>Management</span></h1>
+            <!-- Heading -->
+            <div class="welcome-text">
+                <h1>User Management</h1>
                 <p>View, search, edit, or deactivate student, instructor, and admin accounts.</p>
             </div>
 
-            <!-- FILTER / SEARCH BAR -->
-            <div class="filter-bar">
+            <!-- Add new user form -->
+            <div class="add-row">
+                <asp:TextBox ID="txtNewName" runat="server" placeholder="Full name"></asp:TextBox>
+                <asp:TextBox ID="txtNewEmail" runat="server" placeholder="Email address"></asp:TextBox>
+                <asp:TextBox ID="txtNewPassword" runat="server" TextMode="Password" placeholder="Password"></asp:TextBox>
+                <asp:DropDownList ID="ddlNewRole" runat="server">
+                    <asp:ListItem Text="Student" Value="Student" />
+                    <asp:ListItem Text="Language Instructor" Value="Language Instructor" />
+                    <asp:ListItem Text="Admin" Value="Admin" />
+                </asp:DropDownList>
+                <asp:LinkButton ID="btnAddUser" runat="server" CssClass="back-btn" OnClick="btnAddUser_Click"
+                    OnClientClick="return confirmAction('Add this new user?', this);">Add User</asp:LinkButton>
+            </div>
+
+            <!-- Filter row -->
+            <div class="filter-row">
                 <asp:TextBox ID="txtSearch" runat="server" placeholder="Search by name or email..."></asp:TextBox>
 
-                <asp:DropDownList ID="ddlRoleFilter" runat="server">
+                <asp:DropDownList ID="ddlRoleFilter" runat="server" AutoPostBack="true" OnSelectedIndexChanged="Filter_Changed">
                     <asp:ListItem Text="All Roles" Value="" />
-                    <asp:ListItem Text="Student" Value="student" />
-                    <asp:ListItem Text="Language Instructor" Value="instructor" />
-                    <asp:ListItem Text="Admin" Value="admin" />
+                    <asp:ListItem Text="Student" Value="Student" />
+                    <asp:ListItem Text="Language Instructor" Value="Language Instructor" />
+                    <asp:ListItem Text="Admin" Value="Admin" />
                 </asp:DropDownList>
 
-                <asp:DropDownList ID="ddlStatusFilter" runat="server">
+                <asp:DropDownList ID="ddlStatusFilter" runat="server" AutoPostBack="true" OnSelectedIndexChanged="Filter_Changed">
                     <asp:ListItem Text="All Status" Value="" />
-                    <asp:ListItem Text="Active" Value="Active" />
-                    <asp:ListItem Text="Inactive" Value="Inactive" />
+                    <asp:ListItem Text="Active" Value="ACTIVE" />
+                    <asp:ListItem Text="Inactive" Value="INACTIVE" />
                 </asp:DropDownList>
 
-                <asp:Button ID="btnSearch" runat="server" Text="Search" CssClass="btn-primary" OnClick="btnSearch_Click" />
-
-                <a href="AddUser.aspx" class="btn-add"><i class="fa fa-plus"></i> Add New User</a>
+                <asp:LinkButton ID="btnSearch" runat="server" CssClass="back-btn" OnClick="btnSearch_Click">Search</asp:LinkButton>
             </div>
 
-            <!-- USERS TABLE -->
-            <div class="table-card">
-                <asp:GridView
-                    ID="gvUsers"
-                    runat="server"
-                    CssClass="users-table"
-                    AutoGenerateColumns="false"
-                    GridLines="None"
-                    AllowPaging="true"
-                    PageSize="10"
-                    OnPageIndexChanging="gvUsers_PageIndexChanging"
-                    OnRowCommand="gvUsers_RowCommand"
-                    DataKeyNames="UserID">
+            <!-- Only shows on error/success feedback -->
+            <asp:Label ID="lblMessage" runat="server" CssClass="status-message"></asp:Label>
 
-                    <Columns>
+            <!-- GridView - bound manually in code-behind (BindGrid), same
+                 ADO.NET style as Login.aspx.cs -->
+            <asp:GridView ID="GridViewUsers" runat="server"
+                CssClass="users-table"
+                AutoGenerateColumns="false"
+                GridLines="None"
+                DataKeyNames="UserID"
+                AllowSorting="true"
+                AllowPaging="true"
+                PageSize="8"
+                OnRowEditing="GridViewUsers_RowEditing"
+                OnRowUpdating="GridViewUsers_RowUpdating"
+                OnRowCancelingEdit="GridViewUsers_RowCancelingEdit"
+                OnRowDataBound="GridViewUsers_RowDataBound"
+                OnSorting="GridViewUsers_Sorting"
+                OnPageIndexChanging="GridViewUsers_PageIndexChanging">
+                <Columns>
+                    <asp:BoundField DataField="UserID" HeaderText="User ID" ReadOnly="true" />
+                    <asp:BoundField DataField="Name" HeaderText="Name" SortExpression="Name" />
+                    <asp:BoundField DataField="Email" HeaderText="Email" SortExpression="Email" />
 
-                        <asp:TemplateField HeaderText="User">
-                            <ItemTemplate>
-                                <div class="profile-cell">
-                                    <img src='<%# "~/Images/Profiles/" + Eval("ProfilePicture") %>' alt="" />
-                                    <div>
-                                        <div><%# Eval("Name") %></div>
-                                        <div style="font-size:12px;color:#999999;"><%# Eval("Email") %></div>
-                                    </div>
-                                </div>
-                            </ItemTemplate>
-                        </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Role" SortExpression="Role">
+                        <ItemTemplate><%# Eval("Role") %></ItemTemplate>
+                        <EditItemTemplate>
+                            <asp:DropDownList ID="ddlEditRole" runat="server">
+                                <asp:ListItem Text="Student" Value="Student" />
+                                <asp:ListItem Text="Language Instructor" Value="Language Instructor" />
+                                <asp:ListItem Text="Admin" Value="Admin" />
+                            </asp:DropDownList>
+                        </EditItemTemplate>
+                    </asp:TemplateField>
 
-                        <asp:BoundField HeaderText="User ID" DataField="UserID" />
+                    <asp:TemplateField HeaderText="Status" SortExpression="Status">
+                        <ItemTemplate><%# Eval("Status") %></ItemTemplate>
+                        <EditItemTemplate>
+                            <asp:DropDownList ID="ddlEditStatus" runat="server">
+                                <asp:ListItem Text="Active" Value="ACTIVE" />
+                                <asp:ListItem Text="Inactive" Value="INACTIVE" />
+                            </asp:DropDownList>
+                        </EditItemTemplate>
+                    </asp:TemplateField>
 
-                        <asp:TemplateField HeaderText="Role">
-                            <ItemTemplate>
-                                <span class="role-pill"><%# Eval("Role") %></span>
-                            </ItemTemplate>
-                        </asp:TemplateField>
+                    <asp:BoundField DataField="RegisteredDate" HeaderText="Registered" DataFormatString="{0:dd/MM/yyyy}" ReadOnly="true" SortExpression="RegisteredDate" />
 
-                        <asp:TemplateField HeaderText="Status">
-                            <ItemTemplate>
-                                <span class='status-pill <%# Eval("Status").ToString().ToLower() %>'>
-                                    <%# Eval("Status") %>
-                                </span>
-                            </ItemTemplate>
-                        </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Actions">
+                        <ItemTemplate>
+                            <asp:LinkButton runat="server" CssClass="action-link" CommandName="Edit">Edit</asp:LinkButton>
+                        </ItemTemplate>
+                        <EditItemTemplate>
+                            <asp:LinkButton runat="server" CssClass="action-link"
+                                CommandName="Update"
+                                OnClientClick="return confirmAction('Save changes to this user?', this);">Update</asp:LinkButton>
+                            <asp:LinkButton runat="server" CssClass="action-link" CommandName="Cancel">Cancel</asp:LinkButton>
+                        </EditItemTemplate>
+                    </asp:TemplateField>
+                </Columns>
 
-                        <asp:BoundField HeaderText="Registered" DataField="RegisteredDate" DataFormatString="{0:dd/MM/yyyy}" />
+                <EmptyDataTemplate>
+                    <div class="empty-row">No users found matching your search.</div>
+                </EmptyDataTemplate>
 
-                        <asp:TemplateField HeaderText="Actions">
-                            <ItemTemplate>
-                                <asp:LinkButton
-                                    runat="server"
-                                    CssClass="action-link edit"
-                                    CommandName="EditUser"
-                                    CommandArgument='<%# Eval("UserID") %>'>Edit</asp:LinkButton>
-
-                                <asp:LinkButton
-                                    runat="server"
-                                    CssClass="action-link toggle"
-                                    CommandName="ToggleStatus"
-                                    CommandArgument='<%# Eval("UserID") %>'
-                                    OnClientClick="return confirm('Are you sure you want to change this user\'s status?');">
-                                    <%# Eval("Status").ToString() == "Active" ? "Deactivate" : "Activate" %>
-                                </asp:LinkButton>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-
-                    </Columns>
-
-                    <EmptyDataTemplate>
-                        <table class="users-table">
-                            <tr class="empty-row"><td>No users found matching your search.</td></tr>
-                        </table>
-                    </EmptyDataTemplate>
-
-                    <PagerStyle CssClass="pager-row" />
-
-                </asp:GridView>
-            </div>
+                <PagerStyle CssClass="pager-row" />
+            </asp:GridView>
 
         </section>
 
     </form>
+
+    <!-- Shared confirmation modal logic (used across Admin pages) -->
+    <script src="../Scripts/jquery-3.7.0.min.js"></script>
+    <script src="../Scripts/confirmModal.js"></script>
 </body>
 </html>
