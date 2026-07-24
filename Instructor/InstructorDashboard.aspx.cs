@@ -17,6 +17,13 @@ namespace HangeulHubWAPP.Instructor
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["UserID"] == null || Session["Role"] == null ||
+                Session["Role"].ToString() != "Language Instructor")
+            {
+                Response.Redirect("~/Login.aspx");
+                return;
+            }
+
             if (!IsPostBack)
             {
                 lblInstructorName.Text = Session["Name"] != null
@@ -30,21 +37,27 @@ namespace HangeulHubWAPP.Instructor
 
         private void LoadDashboardData()
         {
+            string instructorID = Session["UserID"].ToString();
+
             using (SqlConnection con = new SqlConnection(connectionString))
             {
                 con.Open();
 
                 lblTotalLessons.Text = GetCount(
-                    "SELECT COUNT(*) FROM lessonTable", con).ToString();
+                    "SELECT COUNT(*) FROM lessonTable WHERE instructorID = @instructorID",
+                    con, instructorID).ToString();
 
                 lblOpenQuestions.Text = GetCount(
-                    "SELECT COUNT(*) FROM forumTable WHERE stat = 'Open'", con).ToString();
+                    "SELECT COUNT(*) FROM forumTable WHERE stat = 'Open' AND lecturerID = @instructorID",
+                    con, instructorID).ToString();
 
                 lblBeginner.Text = GetCount(
-                    "SELECT COUNT(*) FROM lessonTable WHERE courseID = 'C001'", con).ToString();
+                    "SELECT COUNT(*) FROM lessonTable WHERE courseID = 'C001' AND instructorID = @instructorID",
+                    con, instructorID).ToString();
 
                 lblIntermediateAdvanced.Text = GetCount(
-                    "SELECT COUNT(*) FROM lessonTable WHERE courseID IN ('C002', 'C003')", con).ToString();
+                    "SELECT COUNT(*) FROM lessonTable WHERE courseID IN ('C002', 'C003') AND instructorID = @instructorID",
+                    con, instructorID).ToString();
             }
 
             // Hani's message reacts to the same open-question count shown in lblOpenQuestions -
@@ -60,24 +73,30 @@ namespace HangeulHubWAPP.Instructor
                 litHaniMessage.Text = "🐰 Hani says: “Your students need you today!”";
         }
 
-        private int GetCount(string query, SqlConnection con)
+        private int GetCount(string query, SqlConnection con, string instructorID)
         {
             SqlCommand cmd = new SqlCommand(query, con);
+            cmd.Parameters.AddWithValue("@instructorID", instructorID);
             return Convert.ToInt32(cmd.ExecuteScalar());
         }
 
         private void LoadRecentQuestions()
         {
+  
             string query = @"SELECT TOP 5
                             questionText AS Question,
                             questionDate AS Date,
                             stat AS Status
                             FROM forumTable
+                            WHERE lecturerID = @instructorID
                             ORDER BY questionDate DESC";
 
             using (SqlConnection con = new SqlConnection(connectionString))
-            using (SqlDataAdapter da = new SqlDataAdapter(query, con))
+            using (SqlCommand cmd = new SqlCommand(query, con))
             {
+                cmd.Parameters.AddWithValue("@instructorID", Session["UserID"].ToString());
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
 
